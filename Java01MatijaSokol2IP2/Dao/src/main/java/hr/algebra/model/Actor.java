@@ -2,12 +2,22 @@ package hr.algebra.model;
 
 public class Actor {
 
+    private int id;
     private String FirstName;
     private String LastName;
 
-    public Actor(String FirstName, String LastName) {
+    public Actor(int id, String FirstName, String LastName) {
+        setId(id);
         setFirstName(FirstName);
         setLastName(LastName);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFirstName() {
