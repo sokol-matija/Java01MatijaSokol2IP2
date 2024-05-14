@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
+//TODO: Explore error
 public class SqlRepository implements Repository {
 
     private static final String ID_MOVIE = "IDMovie";
@@ -69,6 +70,7 @@ public class SqlRepository implements Repository {
             for (Actor actor : movie.getActors()) {
                 actorIds.add(actor.getId());
             }
+            //TODO: Fix error
             stmt.setArray(ACTOR_IDS, con.createArrayOf("INTEGER", actorIds.toArray()));
 
             stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
@@ -106,6 +108,7 @@ public class SqlRepository implements Repository {
             for (Actor actor : movie.getActors()) {
                 actorIds.add(actor.getId());
             }
+            //TODO: Fix error
             stmt.setArray(ACTOR_IDS, con.createArrayOf("INTEGER", actorIds.toArray()));
 
             stmt.executeUpdate();
@@ -128,6 +131,7 @@ public class SqlRepository implements Repository {
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_ALL_MOVIES)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    //TODO: Fix Constructor
                     Movie movie = new Movie(
                             rs.getInt(ID_MOVIE),
                             rs.getString(TITLE),
