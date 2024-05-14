@@ -15,7 +15,7 @@ public class Movie {
     private String description;
     private String originalTitle;
     private Director director;
-    private Actor actor;
+    private List<Actor> actors;
     private int duration;
     private String link;
     private int year;
@@ -24,13 +24,13 @@ public class Movie {
     private int rating;
     private String type;
 
-    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, Actor actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
+    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, List<Actor> actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
         setTitle(title);
         setPublishedDate(publishedDate);
         setDescription(description);
         setOriginalTitle(originalTitle);
         setDirector(director);
-        setActor(actor);
+        setActors(actor);
         setDuration(duration);
         setLink(link);
         setYear(year);
@@ -40,9 +40,9 @@ public class Movie {
         setType(type);
     }
 
-    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, Actor actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
-        this(title, publishedDate, description, originalTitle, director, actor, duration, link, year, genres, picturePath, rating, type);
-        setId(id);
+    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, List<Actor> actors, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
+        this(title, publishedDate, description, originalTitle, director, actors, duration, link, year, genres, picturePath, rating, type);
+        this.id = id;
     }
 
     public Movie() {
@@ -96,12 +96,12 @@ public class Movie {
         this.director = director;
     }
 
-    public Actor getActor() {
+    public Actor getActors() {
         return actor;
     }
 
-    public void setActor(Actor actor) {
-        this.actor = actor;
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
     }
 
     public int getDuration() {
