@@ -22,8 +22,8 @@ public class SqlRepository implements Repository {
     private static final String PICTURE_PATH = "PicturePath";
     private static final String RATIN = "Rating";
     private static final String TYPE = "Type";
-
-    //TODO: Implement Repository methods
+    private static final String DIRECTOR_ID = "DirectorID";
+    private static final String ACTOR_IDS = "ActorIDs";
     @Override
     public int createMovie(Movie movie) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
