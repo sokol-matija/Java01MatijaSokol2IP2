@@ -69,8 +69,31 @@ public class SqlRepository implements Repository {
     }
 
     @Override
-    public void updateMovies(int id, Movie movies) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void updateMovie(int id, Movie movie) throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_MOVIE)) {
+            stmt.setInt(ID_MOVIE, id);
+            stmt.setString(TITLE, movie.getTitle());
+            stmt.setString(DESCRIPTION, movie.getDescription());
+            stmt.setString(LINK, movie.getLink());
+            stmt.setString(PICTURE_PATH, movie.getPicturePath());
+            stmt.setString(PUBLISHED_DATE, movie.getPublishedDate().format(Movie.DATE_FORMATTER));
+            stmt.setInt(YEAR, movie.getYear());
+            stmt.setDouble(RATING, movie.getRating());
+            stmt.setString(TYPE, movie.getType());
+
+            // Set director
+            stmt.setInt(DIRECTOR_ID, movie.getDirector().getId());
+
+            // Set actors (assuming there's a separate table for actors)
+            List<Integer> actorIds = new ArrayList<>();
+            for (Actor actor : movie.getActors()) {
+                actorIds.add(actor.getId());
+            }
+            stmt.setArray(ACTOR_IDS, con.createArrayOf("INTEGER", actorIds.toArray()));
+
+            stmt.executeUpdate();
+        }
     }
 
     @Override
