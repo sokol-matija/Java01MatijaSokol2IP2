@@ -26,4 +26,9 @@ public class Actor {
         this.LastName = LastName;
     }
 
+    @Override
+    public String toString() {
+        return "Actor{" + "FirstName=" + FirstName + ", LastName=" + LastName + '}';
+    }
+
 }
