@@ -2,6 +2,7 @@ package hr.algebra.dal.sql;
 
 import java.io.InputStream;
 import java.util.Properties;
+import javax.sql.DataSource;
 
 public class DataSourceSingleton {
 
@@ -24,5 +25,7 @@ public class DataSourceSingleton {
 
     private DataSourceSingleton() {
     }
+
+    private static DataSource instance;
 
 }
