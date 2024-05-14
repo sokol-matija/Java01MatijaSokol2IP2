@@ -97,8 +97,12 @@ public class SqlRepository implements Repository {
     }
 
     @Override
-    public void deleteMovies(int id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void deleteMovie(int id) throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(DELETE_MOVIE)) {
+            stmt.setInt(ID_MOVIE, id);
+            stmt.executeUpdate();
+        }
     }
 
     @Override
