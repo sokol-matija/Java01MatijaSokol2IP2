@@ -1,9 +1,18 @@
 package hr.algebra.dal.sql;
 
 import hr.algebra.dal.Repository;
+import hr.algebra.model.Actor;
+import hr.algebra.model.Director;
 import hr.algebra.model.Movie;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Types;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
 
 public class SqlRepository implements Repository {
 
