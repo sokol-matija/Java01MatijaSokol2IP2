@@ -10,9 +10,9 @@ public interface Repository {
 
     void createMovies(List<Movie> movies) throws Exception;
 
-    void updateMovies(int id, Movie movies) throws Exception;
+    void updateMovie(int id, Movie movies) throws Exception;
 
-    void deleteMovies(int id) throws Exception;
+    void deleteMovie(int id) throws Exception;
 
     Optional<Movie> selectMovie(int id) throws Exception;
 
