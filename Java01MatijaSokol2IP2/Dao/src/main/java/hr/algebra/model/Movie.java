@@ -25,19 +25,20 @@ public class Movie {
     private String type;
 
     public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, Actor actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
-        this.title = title;
-        this.publishedDate = publishedDate;
-        this.description = description;
-        this.originalTitle = originalTitle;
-        this.director = director;
-        this.actor = actor;
-        this.duration = duration;
-        this.link = link;
-        this.year = year;
-        this.genres = genres;
-        this.picturePath = picturePath;
-        this.rating = rating;
-        this.type = type;
+        setTitle(title);
+        setPublishedDate(publishedDate);
+        setDescription(description);
+        setOriginalTitle(originalTitle);
+        setDirector(director);
+        setActor(actor);
+        setDuration(duration);
+        setLink(link);
+        setYear(year);
+        setGenres(genres);
+        setPicturePath(picturePath);
+        setRating(rating);
+        setType(type);
+
     }
 
     public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, Actor actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
