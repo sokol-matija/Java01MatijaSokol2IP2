@@ -6,8 +6,8 @@ public class Actor {
     private String LastName;
 
     public Actor(String FirstName, String LastName) {
-        this.FirstName = FirstName;
-        this.LastName = LastName;
+        setFirstName(FirstName);
+        setLastName(LastName);
     }
 
     public String getFirstName() {
