@@ -96,8 +96,8 @@ public class Movie {
         this.director = director;
     }
 
-    public Actor getActors() {
-        return actor;
+    public List<Actor> getActors() {
+        return actors;
     }
 
     public void setActors(List<Actor> actors) {
@@ -162,7 +162,7 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "Movie{" + "id=" + id + ", title=" + title + ", publishedDate=" + publishedDate + ", description=" + description + ", originalTitle=" + originalTitle + ", director=" + director + ", actor=" + actor + ", duration=" + duration + ", link=" + link + ", year=" + year + ", genres=" + genres + ", picturePath=" + picturePath + ", rating=" + rating + ", type=" + type + '}';
+        return "Movie{" + "id=" + id + ", title=" + title + ", publishedDate=" + publishedDate + ", description=" + description + ", originalTitle=" + originalTitle + ", director=" + director.toString() + ", actor=" + actors.toString() + ", duration=" + duration + ", link=" + link + ", year=" + year + ", genres=" + genres + ", picturePath=" + picturePath + ", rating=" + rating + ", type=" + type + '}';
     }
 
     @Override
