@@ -6,8 +6,8 @@ class Director {
     private String LastName;
 
     public Director(String FirstName, String LastName) {
-        this.FirstName = FirstName;
-        this.LastName = LastName;
+        getFirstName();
+        getLastName();
     }
 
     public String getFirstName() {
