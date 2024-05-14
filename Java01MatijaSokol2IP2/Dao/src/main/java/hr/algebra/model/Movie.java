@@ -165,4 +165,26 @@ public class Movie {
         return "Movie{" + "id=" + id + ", title=" + title + ", publishedDate=" + publishedDate + ", description=" + description + ", originalTitle=" + originalTitle + ", director=" + director + ", actor=" + actor + ", duration=" + duration + ", link=" + link + ", year=" + year + ", genres=" + genres + ", picturePath=" + picturePath + ", rating=" + rating + ", type=" + type + '}';
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 17 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Movie other = (Movie) obj;
+        return this.id == other.id;
+    }
+
 }
