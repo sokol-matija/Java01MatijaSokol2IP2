@@ -137,7 +137,31 @@ public class SqlRepository implements Repository {
 
     @Override
     public List<Movie> selectMovies() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Movie> movies = new ArrayList<>();
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_MOVIES)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Movie movie = new Movie(
+                            rs.getInt(ID_MOVIE),
+                            rs.getString(TITLE),
+                            rs.getString(DESCRIPTION),
+                            rs.getString(LINK),
+                            rs.getString(PICTURE_PATH),
+                            LocalDateTime.parse(PUBLISHED_DATE, Movie.DATE_FORMATTER),
+                            rs.getInt(YEAR),
+                            rs.getDouble(RATING),
+                            rs.getString(TYPE),
+                            // Load director and actors
+                            new Director(rs.getInt(DIRECTOR_ID), "Director Name"), // You need to fetch director details from the database
+                            new ArrayList<>() // You need to fetch actor details from the database
+                    );
+                    // Load actors
+                    // movie.setActors(fetchActorsForMovie(movie.getId()));
+                    movies.add(movie);
+                }
+            }
+        }
+        return movies;
     }
-
 }
