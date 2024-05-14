@@ -21,4 +21,8 @@ public class DataSourceSingleton {
             e.printStackTrace();
         }
     }
+
+    private DataSourceSingleton() {
+    }
+
 }
