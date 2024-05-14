@@ -1,6 +1,6 @@
 package hr.algebra.model;
 
 
-class Genre {
+public class Genre {
 
 }
