@@ -19,7 +19,9 @@ public class Movie {
     private int duration;
     private String link;
     private int year;
-    private List<Genre> genres
+    private List<Genre> genres;
     private String picturePath;
+    private int rating;
+    private int Type;
 
 }
