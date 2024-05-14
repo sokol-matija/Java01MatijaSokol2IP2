@@ -2,7 +2,6 @@ package hr.algebra.dal.sql;
 
 import hr.algebra.dal.Repository;
 import hr.algebra.model.Actor;
-import hr.algebra.model.Director;
 import hr.algebra.model.Movie;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -11,7 +10,6 @@ import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.sql.DataSource;
 
 public class SqlRepository implements Repository {
@@ -28,11 +26,29 @@ public class SqlRepository implements Repository {
     private static final String DIRECTOR_ID = "DirectorID";
     private static final String ACTOR_IDS = "ActorIDs";
 
-    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?) }";
-    private static final String UPDATE_MOVIE = "{ CALL updateMovie (?,?,?,?,?,?,?,?,?,?) }";
-    private static final String DELETE_MOVIE = "{ CALL deleteMovie (?) }";
-    private static final String SELECT_MOVIE = "{ CALL selectMovie (?) }";
-    private static final String SELECT_MOVIES = "{ CALL selectMovies }";
+    private static final String CREATE_MOVIE = "{ CALL CreateMovie (?,?,?,?,?,?,?,?,?,?,?,?) }";
+    private static final String UPDATE_MOVIE = "{ CALL UpdateMovie (?,?,?,?,?,?,?,?,?,?,?,?) }";
+    private static final String DELETE_MOVIE = "{ CALL DeleteMovie (?) }";
+    private static final String SELECT_MOVIE = "{ CALL SelectMovie (?) }";
+    private static final String SELECT_ALL_MOVIES = "{ CALL SelectAllMovies }";
+
+    private static final String CREATE_ACTOR = "{ CALL CreateActor (?,?) }";
+    private static final String UPDATE_ACTOR = "{ CALL UpdateActor (?,?,?) }";
+    private static final String DELETE_ACTOR = "{ CALL DeleteActor (?) }";
+    private static final String SELECT_ACTOR = "{ CALL SelectActor (?) }";
+    private static final String SELECT_ALL_ACTORS = "{ CALL SelectAllActors }";
+
+    private static final String CREATE_GENRE = "{ CALL CreateGenre (?) }";
+    private static final String UPDATE_GENRE = "{ CALL UpdateGenre (?,?) }";
+    private static final String DELETE_GENRE = "{ CALL DeleteGenre (?) }";
+    private static final String SELECT_GENRE = "{ CALL SelectGenre (?) }";
+    private static final String SELECT_ALL_GENRES = "{ CALL SelectAllGenres }";
+
+    private static final String CREATE_DIRECTOR = "{ CALL CreateDirector (?,?) }";
+    private static final String UPDATE_DIRECTOR = "{ CALL UpdateDirector (?,?,?) }";
+    private static final String DELETE_DIRECTOR = "{ CALL DeleteDirector (?) }";
+    private static final String SELECT_DIRECTOR = "{ CALL SelectDirector (?) }";
+    private static final String SELECT_ALL_DIRECTORS = "{ CALL SelectAllDirectors }";
 
     @Override
     public int createMovie(Movie movie) throws Exception {
