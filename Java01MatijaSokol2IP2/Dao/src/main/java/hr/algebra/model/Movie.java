@@ -24,4 +24,20 @@ public class Movie {
     private int rating;
     private int Type;
 
+    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, Actor actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, int Type) {
+        this.title = title;
+        this.publishedDate = publishedDate;
+        this.description = description;
+        this.originalTitle = originalTitle;
+        this.director = director;
+        this.actor = actor;
+        this.duration = duration;
+        this.link = link;
+        this.year = year;
+        this.genres = genres;
+        this.picturePath = picturePath;
+        this.rating = rating;
+        this.Type = Type;
+    }
+
 }
