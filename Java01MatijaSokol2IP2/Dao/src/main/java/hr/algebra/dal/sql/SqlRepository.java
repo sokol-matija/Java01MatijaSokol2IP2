@@ -16,18 +16,12 @@ import javax.sql.DataSource;
 
 public class SqlRepository implements Repository {
 
-    //TODO: Figure out user defined data type how to use
     private static final String ID_MOVIE = "IDMovie";
     private static final String TITLE = "Title";
     private static final String PUBLISHED_DATE = "PublishedDate";
     private static final String DESCRIPTION = "Description";
-    private static final String ORIGINAL_DAT = "OriginalDate";
-    //private static final Director DIRECTOR = "Director";
-    //private static final Actor ACTOR = "Actor";
-    //private static final int DURATION = "Duration";
     private static final String LINK = "Link";
     private static final String YEAR = "Year";
-    //private static final List<Genre> GENRES = "Genres";
     private static final String PICTURE_PATH = "PicturePath";
     private static final String RATING = "Rating";
     private static final String TYPE = "Type";
