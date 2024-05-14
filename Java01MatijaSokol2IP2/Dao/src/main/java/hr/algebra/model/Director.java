@@ -26,4 +26,9 @@ class Director {
         this.LastName = LastName;
     }
 
+    @Override
+    public String toString() {
+        return "Director{" + "FirstName=" + FirstName + ", LastName=" + LastName + '}';
+    }
+
 }
