@@ -63,7 +63,9 @@ public class SqlRepository implements Repository {
 
     @Override
     public void createMovies(List<Movie> movies) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        for (Movie movie : movies) {
+            createMovie(movie);
+        }
     }
 
     @Override
