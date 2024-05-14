@@ -1,5 +1,6 @@
 package hr.algebra.dal.sql;
 
+import java.io.InputStream;
 import java.util.Properties;
 
 public class DataSourceSingleton {
@@ -12,4 +13,12 @@ public class DataSourceSingleton {
     private static final String PASSWORD = "PASSWORD";
 
     private static final Properties PROPERTIES = new Properties();
+
+    static {
+        try (InputStream is = DataSourceSingleton.class.getResourceAsStream(PATH)) {
+            PROPERTIES.load(is);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
