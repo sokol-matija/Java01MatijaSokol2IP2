@@ -1,5 +1,6 @@
 package hr.algebra.dal.sql;
 
+import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import java.io.InputStream;
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -27,5 +28,21 @@ public class DataSourceSingleton {
     }
 
     private static DataSource instance;
+
+    public static DataSource getInstance() {
+        if (instance == null) {
+            instance = createInstance();
+        }
+        return instance;
+    }
+
+    private static DataSource createInstance() {
+        SQLServerDataSource dataSource = new SQLServerDataSource();
+        dataSource.setServerName(SERVER_NAME);
+        dataSource.setDatabaseName(DATABASE_NAME);
+        dataSource.setUser(USER);
+        dataSource.setPassword(PASSWORD);
+        return dataSource;
+    }
 
 }
