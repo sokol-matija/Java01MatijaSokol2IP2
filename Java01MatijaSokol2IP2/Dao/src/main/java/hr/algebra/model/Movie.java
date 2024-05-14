@@ -22,9 +22,9 @@ public class Movie {
     private List<Genre> genres;
     private String picturePath;
     private int rating;
-    private int Type;
+    private String type;
 
-    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, Actor actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, int Type) {
+    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, Actor actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
         this.title = title;
         this.publishedDate = publishedDate;
         this.description = description;
@@ -37,7 +37,15 @@ public class Movie {
         this.genres = genres;
         this.picturePath = picturePath;
         this.rating = rating;
-        this.Type = Type;
+        this.type = type;
+    }
+
+    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, Actor actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
+        this(title, publishedDate, description, originalTitle, director, actor, duration, link, year, genres, picturePath, rating, type);
+        this.id = id;
+    }
+
+    public Movie() {
     }
 
 }
