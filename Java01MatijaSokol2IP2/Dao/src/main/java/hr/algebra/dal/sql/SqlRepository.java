@@ -33,7 +33,29 @@ public class SqlRepository implements Repository {
 
     @Override
     public int createMovie(Movie movie) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_MOVIE)) {
+            stmt.setString(TITLE, movie.getTitle());
+            stmt.setString(DESCRIPTION, movie.getDescription());
+            stmt.setString(LINK, movie.getLink());
+            stmt.setString(PICTURE_PATH, movie.getPicturePath());
+            stmt.setString(PUBLISHED_DATE, movie.getPublishedDate().format(Movie.DATE_FORMATTER));
+            stmt.setInt(YEAR, movie.getYear());
+            stmt.setDouble(RATING, movie.getRating());
+            stmt.setString(TYPE, movie.getType());
+
+            stmt.setInt(DIRECTOR_ID, movie.getDirector().getId());
+
+            List<Integer> actorIds = new ArrayList<>();
+            for (Actor actor : movie.getActors()) {
+                actorIds.add(actor.getId());
+            }
+            stmt.setArray(ACTOR_IDS, con.createArrayOf("INTEGER", actorIds.toArray()));
+
+            stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
+            stmt.executeUpdate();
+            return stmt.getInt(ID_MOVIE);
+        }
     }
 
     @Override
