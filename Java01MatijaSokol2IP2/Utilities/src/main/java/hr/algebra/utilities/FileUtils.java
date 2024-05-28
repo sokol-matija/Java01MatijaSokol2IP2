@@ -55,4 +55,8 @@ public class FileUtils {
             Files.createDirectories(Paths.get(dir));
         }
     }
+
+    public static boolean filenameHasExtension(String filename, int length) {
+        return filename.contains(".") && filename.substring(filename.lastIndexOf(".") + 1).length() == length;
+    }
 }
