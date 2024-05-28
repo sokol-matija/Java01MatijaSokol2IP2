@@ -19,7 +19,7 @@ public class FileUtils {
 
     private static final String UPLOAD = "Upload";
     private static final String SAVE = "Save";
-    private static final String TEXT_DOCUMENT = "Text document (*.txt)";
+    private static final String TEXT_DOCUMENTS = "Text document (*.txt)";
     private static final String TXT = "txt";
 
     public static Optional<File> uploadFile(String description, String... extensions) {
@@ -58,5 +58,26 @@ public class FileUtils {
 
     public static boolean filenameHasExtension(String filename, int length) {
         return filename.contains(".") && filename.substring(filename.lastIndexOf(".") + 1).length() == length;
+    }
+
+    public static Optional<File> saveTextInFile(String text, Optional<File> optFile) throws IOException {
+        if (!optFile.isPresent()) {
+            JFileChooser chooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            chooser.setFileFilter(new FileNameExtensionFilter(TEXT_DOCUMENTS, TXT));
+            chooser.setDialogTitle(SAVE);
+            chooser.setApproveButtonText(SAVE);
+            chooser.setApproveButtonToolTipText(SAVE);
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = chooser.getSelectedFile();
+                if (!selectedFile.toString().endsWith(TXT)) {
+                    selectedFile = new File(selectedFile.toString().concat(".").concat(TXT));
+                }
+                Files.write(selectedFile.toPath(), text.getBytes());
+                optFile = Optional.of(selectedFile);
+            }
+        } else {
+            Files.write(optFile.get().toPath(), text.getBytes());
+        }
+        return optFile;
     }
 }
