@@ -4,6 +4,7 @@ import java.io.File;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 public class JAXBUtlils {
 
@@ -17,4 +18,9 @@ public class JAXBUtlils {
         marshaller.marshal(object, new File(filename));
     }
 
+    public static Object load(Class clazz, String filename) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(clazz);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        return unmarshaller.unmarshal(new File(filename));
+    }
 }
