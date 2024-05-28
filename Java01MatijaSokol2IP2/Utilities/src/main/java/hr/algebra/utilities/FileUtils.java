@@ -1,6 +1,14 @@
 package hr.algebra.utilities;
 
+import hr.algebra.factory.UrlConnectionFactory;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
 import javax.swing.JFileChooser;
@@ -26,5 +34,25 @@ public class FileUtils {
             return Arrays.asList(extensions).contains(extension.toLowerCase()) ? Optional.of(selectedFile) : Optional.empty();
         }
         return Optional.empty();
+    }
+
+    public static void copyFromUrl(String source, String destination) throws MalformedURLException, IOException {
+        createDirHierarchy(destination);
+        HttpURLConnection con = UrlConnectionFactory.getHttpURLConnection(source);
+        try (InputStream is = con.getInputStream()) {
+            Files.copy(is, Paths.get(destination));
+        }
+    }
+
+    public static void copy(String source, String destination) throws FileNotFoundException, IOException {
+        createDirHierarchy(destination);
+        Files.copy(Paths.get(source), Paths.get(destination));
+    }
+
+    private static void createDirHierarchy(String destination) throws IOException {
+        String dir = destination.substring(0, destination.lastIndexOf(File.separator));
+        if (!Files.exists(Paths.get(dir))) {
+            Files.createDirectories(Paths.get(dir));
+        }
     }
 }

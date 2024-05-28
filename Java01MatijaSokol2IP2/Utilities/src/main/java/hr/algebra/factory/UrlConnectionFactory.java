@@ -23,5 +23,4 @@ public class UrlConnectionFactory {
         con.setRequestProperty(USER_AGENT, MOZILLA);
         return con;
     }
-
 }
