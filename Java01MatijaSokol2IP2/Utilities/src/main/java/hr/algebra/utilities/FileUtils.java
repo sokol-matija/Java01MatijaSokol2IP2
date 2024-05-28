@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
@@ -79,5 +80,24 @@ public class FileUtils {
             Files.write(optFile.get().toPath(), text.getBytes());
         }
         return optFile;
+    }
+
+    public static Optional<String> loadTextFromFile() throws IOException {
+        JFileChooser chooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        chooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory() || file.toString().endsWith(TXT);
+            }
+
+            @Override
+            public String getDescription() {
+                return TEXT_DOCUMENTS;
+            }
+        });
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            return Optional.of(new String(Files.readAllBytes(chooser.getSelectedFile().toPath())));
+        }
+        return Optional.empty();
     }
 }
