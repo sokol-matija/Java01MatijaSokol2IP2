@@ -13,7 +13,7 @@ public class Movie {
     private String title;
     private LocalDateTime publishedDate;
     private String description;
-    private String originalTitle;
+    //private String originalTitle;
     private Director director;
     private List<Actor> actors;
     private int duration;
@@ -24,11 +24,10 @@ public class Movie {
     private int rating;
     private String type;
 
-    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, List<Actor> actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
+    public Movie(String title, LocalDateTime publishedDate, String description, Director director, List<Actor> actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
         setTitle(title);
         setPublishedDate(publishedDate);
         setDescription(description);
-        setOriginalTitle(originalTitle);
         setDirector(director);
         setActors(actor);
         setDuration(duration);
@@ -40,8 +39,8 @@ public class Movie {
         setType(type);
     }
 
-    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, List<Actor> actors, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
-        this(title, publishedDate, description, originalTitle, director, actors, duration, link, year, genres, picturePath, rating, type);
+    public Movie(int id, String title, LocalDateTime publishedDate, String description, Director director, List<Actor> actors, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
+        this(title, publishedDate, description, director, actors, duration, link, year, genres, picturePath, rating, type);
         this.id = id;
     }
 
@@ -78,14 +77,6 @@ public class Movie {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getOriginalTitle() {
-        return originalTitle;
-    }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
     }
 
     public Director getDirector() {
