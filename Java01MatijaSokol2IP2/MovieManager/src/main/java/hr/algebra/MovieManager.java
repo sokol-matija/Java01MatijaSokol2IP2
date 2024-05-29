@@ -15,6 +15,7 @@ public class MovieManager extends javax.swing.JFrame {
      */
     public MovieManager() {
         initComponents();
+        configurePanels();
     }
 
     /**
@@ -46,6 +47,9 @@ public class MovieManager extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private static final String UPLOAD_PANEL = "Upload movies";
+    private static final String EDIT_PANEL = "Edit movies";
 
     /**
      * @param args the command line arguments
@@ -85,4 +89,11 @@ public class MovieManager extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane tpContent;
     // End of variables declaration//GEN-END:variables
+
+    private void configurePanels() {
+        //TODO: UploadMoviePanel create and add
+        //TODO: EditMoviePanel create and add
+        //tpContent.add(UPLOAD_PANEL, new UploadMoviePanel());
+        //tpContent.add(UPLOAD_PANEL, new EditMoviePanel());
+    }
 }
