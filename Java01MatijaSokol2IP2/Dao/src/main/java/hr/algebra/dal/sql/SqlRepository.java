@@ -6,26 +6,25 @@ import hr.algebra.model.Director;
 import hr.algebra.model.Genre;
 import hr.algebra.model.Movie;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-//TODO: Explore error
-public class SqlRepository implements Repository {
+public abstract class SqlRepository implements Repository {
 
     private static final String ID_MOVIE = "IDMovie";
     private static final String TITLE = "Title";
     private static final String PUBLISHED_DATE = "PublishedDate";
     private static final String DESCRIPTION = "Description";
-    private static final String LINK = "Link";
+    private static final String ORIGINAL_TITLE = "OriginalTitle";
     private static final String YEAR = "Year";
     private static final String PICTURE_PATH = "PicturePath";
     private static final String RATING = "Rating";
     private static final String TYPE = "Type";
     private static final String DIRECTOR_ID = "DirectorID";
     private static final String ACTOR_IDS = "ActorIDs";
+    private static final String LINK = "Link";
 
     private static final String CREATE_MOVIE = "{ CALL CreateMovie (?,?,?,?,?,?,?,?,?,?,?,?) }";
     private static final String UPDATE_MOVIE = "{ CALL UpdateMovie (?,?,?,?,?,?,?,?,?,?,?,?) }";
@@ -58,7 +57,6 @@ public class SqlRepository implements Repository {
             stmt.setString(TITLE, movie.getTitle());
             stmt.setString(DESCRIPTION, movie.getDescription());
             stmt.setString(LINK, movie.getLink());
-            stmt.setString(PICTURE_PATH, movie.getPicturePath());
             stmt.setString(PUBLISHED_DATE, movie.getPublishedDate().format(Movie.DATE_FORMATTER));
             stmt.setInt(YEAR, movie.getYear());
             stmt.setDouble(RATING, movie.getRating());
@@ -71,7 +69,7 @@ public class SqlRepository implements Repository {
                 actorIds.add(actor.getId());
             }
             //TODO: Fix error
-            stmt.setArray(ACTOR_IDS, con.createArrayOf("INTEGER", actorIds.toArray()));
+            //stmt.setArray(ACTOR_IDS, con.createArrayOf("INTEGER", actorIds.toArray()));
 
             stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
             stmt.executeUpdate();
@@ -94,7 +92,6 @@ public class SqlRepository implements Repository {
             stmt.setString(TITLE, movie.getTitle());
             stmt.setString(DESCRIPTION, movie.getDescription());
             stmt.setString(LINK, movie.getLink());
-            stmt.setString(PICTURE_PATH, movie.getPicturePath());
             stmt.setString(PUBLISHED_DATE, movie.getPublishedDate().format(Movie.DATE_FORMATTER));
             stmt.setInt(YEAR, movie.getYear());
             stmt.setDouble(RATING, movie.getRating());
@@ -109,7 +106,7 @@ public class SqlRepository implements Repository {
                 actorIds.add(actor.getId());
             }
             //TODO: Fix error
-            stmt.setArray(ACTOR_IDS, con.createArrayOf("INTEGER", actorIds.toArray()));
+//            stmt.setArray(ACTOR_IDS, con.createArrayOf("INTEGER", actorIds.toArray()));
 
             stmt.executeUpdate();
         }
@@ -124,6 +121,8 @@ public class SqlRepository implements Repository {
         }
     }
 
+    /*
+//TODO Fix Movie Constructor
     @Override
     public List<Movie> selectMovies() throws Exception {
         List<Movie> movies = new ArrayList<>();
@@ -131,7 +130,6 @@ public class SqlRepository implements Repository {
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_ALL_MOVIES)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    //TODO: Fix Constructor
                     Movie movie = new Movie(
                             rs.getInt(ID_MOVIE),
                             rs.getString(TITLE),
@@ -155,7 +153,7 @@ public class SqlRepository implements Repository {
         }
         return movies;
     }
-
+     */
     @Override
     public int createActor(Actor actor) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
@@ -234,6 +232,8 @@ public class SqlRepository implements Repository {
         return actors;
     }
 
+    /*
+    //TODO: Fix createGenre
     @Override
     public int createGenre(Genre genre) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
@@ -244,14 +244,17 @@ public class SqlRepository implements Repository {
             return 0; // Return the newly created genre's ID
         }
     }
+     */
 
+ /*
     @Override
     public void createGenres(List<Genre> genres) throws Exception {
         for (Genre genre : genres) {
             createGenre(genre);
         }
     }
-
+     */
+ /*
     @Override
     public void updateGenre(int id, Genre genre) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
@@ -261,7 +264,7 @@ public class SqlRepository implements Repository {
             stmt.executeUpdate();
         }
     }
-
+     */
     @Override
     public void deleteGenre(int id) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();

@@ -6,10 +6,14 @@ public class Director {
     private String FirstName;
     private String LastName;
 
+    public Director(String FirstName, String LastName) {
+        this.FirstName = FirstName;
+        this.LastName = LastName;
+    }
+
     public Director(int id, String FirstName, String LastName) {
+        this(FirstName, LastName);
         setId(id);
-        setFirstName(FirstName);
-        setLastName(LastName);
     }
 
     public int getId() {

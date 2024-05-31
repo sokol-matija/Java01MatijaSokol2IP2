@@ -6,10 +6,21 @@ public class Actor {
     private String FirstName;
     private String LastName;
 
+    public Actor(String FirstName, String LastName) {
+        this.FirstName = FirstName;
+        this.LastName = LastName;
+    }
+
     public Actor(int id, String FirstName, String LastName) {
+        this(FirstName, LastName);
         setId(id);
-        setFirstName(FirstName);
-        setLastName(LastName);
+    }
+
+    public Actor() {
+    }
+
+    public Actor(String FirstName) {
+        this.FirstName = FirstName;
     }
 
     public int getId() {

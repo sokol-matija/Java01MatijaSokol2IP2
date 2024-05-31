@@ -13,38 +13,44 @@ public class Movie {
     private String title;
     private LocalDateTime publishedDate;
     private String description;
-    //private String originalTitle;
+    private String originalTitle;
     private Director director;
     private List<Actor> actors;
     private int duration;
-    private String link;
     private int year;
-    private List<Genre> genres;
-    private String picturePath;
+    private List<String> genres;
+    private String imageLink;
     private int rating;
     private String type;
-
-    public Movie(String title, LocalDateTime publishedDate, String description, Director director, List<Actor> actor, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
-        setTitle(title);
-        setPublishedDate(publishedDate);
-        setDescription(description);
-        setDirector(director);
-        setActors(actor);
-        setDuration(duration);
-        setLink(link);
-        setYear(year);
-        setGenres(genres);
-        setPicturePath(picturePath);
-        setRating(rating);
-        setType(type);
-    }
-
-    public Movie(int id, String title, LocalDateTime publishedDate, String description, Director director, List<Actor> actors, int duration, String link, int year, List<Genre> genres, String picturePath, int rating, String type) {
-        this(title, publishedDate, description, director, actors, duration, link, year, genres, picturePath, rating, type);
-        this.id = id;
-    }
+    private String link;
+    private String datePlaying;
+    //private String picturePath;
 
     public Movie() {
+    }
+
+    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, List<Actor> actors, int duration, int year, List<String> genres, String imageLink, int rating, String type, String link, String datePlaying) {
+        //TODO: Change use seters
+        this.title = title;
+        this.publishedDate = publishedDate;
+        this.description = description;
+        this.originalTitle = originalTitle;
+        this.director = director;
+        this.actors = actors;
+        this.duration = duration;
+        this.year = year;
+        this.genres = genres;
+        this.imageLink = imageLink;
+        this.rating = rating;
+        this.type = type;
+        this.link = link;
+        this.datePlaying = datePlaying;
+    }
+
+    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, List<Actor> actors, int duration, int year, List<String> genres, String imageLink, int rating, String type, String link, String datePlaying) {
+        this(title, publishedDate, description, originalTitle, director, actors, duration, year, genres, imageLink, rating, type, link, datePlaying);
+        //TODO: Use setters
+        this.id = id;
     }
 
     public int getId() {
@@ -79,6 +85,14 @@ public class Movie {
         this.description = description;
     }
 
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
     public Director getDirector() {
         return director;
     }
@@ -103,14 +117,6 @@ public class Movie {
         this.duration = duration;
     }
 
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
     public int getYear() {
         return year;
     }
@@ -119,20 +125,20 @@ public class Movie {
         this.year = year;
     }
 
-    public List<Genre> getGenres() {
+    public List<String> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(List<String> genres) {
         this.genres = genres;
     }
 
-    public String getPicturePath() {
-        return picturePath;
+    public String getImageLink() {
+        return imageLink;
     }
 
-    public void setPicturePath(String picturePath) {
-        this.picturePath = picturePath;
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
     public int getRating() {
@@ -151,15 +157,26 @@ public class Movie {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "Movie{" + "id=" + id + ", title=" + title + ", publishedDate=" + publishedDate + ", description=" + description + ", originalTitle=" + originalTitle + ", director=" + director.toString() + ", actor=" + actors.toString() + ", duration=" + duration + ", link=" + link + ", year=" + year + ", genres=" + genres + ", picturePath=" + picturePath + ", rating=" + rating + ", type=" + type + '}';
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getDatePlaying() {
+        return datePlaying;
+    }
+
+    public void setDatePlaying(String datePlaying) {
+        this.datePlaying = datePlaying;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 17 * hash + this.id;
+        int hash = 3;
+        hash = 23 * hash + this.id;
         return hash;
     }
 

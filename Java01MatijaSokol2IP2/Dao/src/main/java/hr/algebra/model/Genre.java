@@ -1,13 +1,20 @@
 package hr.algebra.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Genre {
 
     public int id;
-    public String type;
+    public List<String> type;
 
-    public Genre(int id, String type) {
+    public Genre(String... type) {
+        this.type = Arrays.asList(type);
+    }
+
+    public Genre(int id, String... type) {
+        this(type);
         this.id = id;
-        this.type = type;
     }
 
     public int getId() {
@@ -18,11 +25,11 @@ public class Genre {
         this.id = id;
     }
 
-    public String getType() {
+    public List<String> getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(List<String> type) {
         this.type = type;
     }
 
@@ -30,5 +37,4 @@ public class Genre {
     public String toString() {
         return "Genre{" + "id=" + id + ", type=" + type + '}';
     }
-
 }
