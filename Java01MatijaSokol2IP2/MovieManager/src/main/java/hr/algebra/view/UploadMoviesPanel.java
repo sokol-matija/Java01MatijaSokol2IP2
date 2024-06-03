@@ -8,7 +8,10 @@ import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.model.Movie;
 import hr.algebra.parsers.MovieParser;
+import hr.algebra.utilities.MessageUtils;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 
 /**
@@ -18,7 +21,7 @@ import javax.swing.DefaultListModel;
 public class UploadMoviesPanel extends javax.swing.JFrame {
 
     private Repository repository;
-    private DefaultListModel<Movie> model = new DefaultListModel<>();
+    private DefaultListModel<Movie> movieModel = new DefaultListModel<>();
 
     /**
      * Creates new form UploadMoviesPanel
@@ -60,7 +63,7 @@ public class UploadMoviesPanel extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnUpload, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addComponent(btnUpload, javax.swing.GroupLayout.DEFAULT_SIZE, 1199, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
                 .addContainerGap())
         );
@@ -68,7 +71,7 @@ public class UploadMoviesPanel extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -130,20 +133,20 @@ public class UploadMoviesPanel extends javax.swing.JFrame {
 
     private void init() {
         try {
-            repository = RepositoryFactory.getInstance();
+            repository = RepositoryFactory.getRepository();
+            movieModel = new DefaultListModel<>();
             loadModel();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            Logger.getLogger(UploadMoviesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
             System.exit(1);
         }
     }
 
-    private void loadModel() {
-        try {
-            repository.selectMovies().forEach(model::addElement);
-            lsMovies.setModel(model);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void loadModel() throws Exception {
+        List<Movie> movies = repository.selectMovies();
+        movieModel.clear();
+        repository.selectMovies().forEach(movieModel::addElement);
+        lsMovies.setModel(movieModel);
     }
 }

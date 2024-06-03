@@ -2,33 +2,30 @@ package hr.algebra.dal;
 
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class RepositoryFactory {
+public final class RepositoryFactory {
 
+    private static final Properties properties = new Properties();
     private static final String PATH = "/config/repository.properties";
     private static final String CLASS_NAME = "CLASS_NAME";
 
-    private static final Properties PROPERTIES = new Properties();
-
-    private static Repository instance;
+    private static Repository repository;
 
     static {
         try (InputStream is = RepositoryFactory.class.getResourceAsStream(PATH)) {
-            PROPERTIES.load(is);
-            instance = (Repository) Class.forName(PROPERTIES.getProperty(CLASS_NAME))
+            properties.load(is);
+            repository = (Repository) Class
+                    .forName(properties.getProperty(CLASS_NAME))
                     .getDeclaredConstructor()
                     .newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            Logger.getLogger(RepositoryFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private RepositoryFactory() {
+    public static Repository getRepository() {
+        return repository;
     }
-
-    public static Repository getInstance() {
-
-        return instance;
-    }
-
 }

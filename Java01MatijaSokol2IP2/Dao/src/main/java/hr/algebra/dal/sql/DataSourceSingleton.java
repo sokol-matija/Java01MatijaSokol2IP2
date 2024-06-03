@@ -1,11 +1,14 @@
 package hr.algebra.dal.sql;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 
-public class DataSourceSingleton {
+public final class DataSourceSingleton {
 
     private static final String PATH = "/config/db.properties";
 
@@ -14,13 +17,13 @@ public class DataSourceSingleton {
     private static final String USER = "USER";
     private static final String PASSWORD = "PASSWORD";
 
-    private static final Properties PROPERTIES = new Properties();
+    private static final Properties properties = new Properties();
 
     static {
         try (InputStream is = DataSourceSingleton.class.getResourceAsStream(PATH)) {
-            PROPERTIES.load(is);
-        } catch (Exception e) {
-            e.printStackTrace();
+            properties.load(is);
+        } catch (IOException ex) {
+            Logger.getLogger(DataSourceSingleton.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -37,11 +40,16 @@ public class DataSourceSingleton {
     }
 
     private static DataSource createInstance() {
+        System.out.println(properties.getProperty(SERVER_NAME));
+        System.out.println(properties.getProperty(DATABASE_NAME));
+        System.out.println(properties.getProperty(USER));
+        System.out.println(properties.getProperty(PASSWORD));
+
         SQLServerDataSource dataSource = new SQLServerDataSource();
-        dataSource.setServerName(SERVER_NAME);
-        dataSource.setDatabaseName(DATABASE_NAME);
-        dataSource.setUser(USER);
-        dataSource.setPassword(PASSWORD);
+        dataSource.setServerName(properties.getProperty(SERVER_NAME));
+        dataSource.setDatabaseName(properties.getProperty(DATABASE_NAME));
+        dataSource.setUser(properties.getProperty(USER));
+        dataSource.setPassword(properties.getProperty(PASSWORD));
         return dataSource;
     }
 

@@ -1,8 +1,6 @@
 package hr.algebra.model;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class Movie {
 
@@ -11,45 +9,35 @@ public class Movie {
 
     private int id;
     private String title;
-    private LocalDateTime publishedDate;
+    //private LocalDateTime publishedDate;
     private String description;
     private String originalTitle;
-    private Director director;
-    private List<Actor> actors;
+    //private Director director;
+    //private List<Actor> actors;
     private int duration;
     private int year;
-    private List<String> genres;
+    //private List<String> genres;
     private String imageLink;
     private int rating;
     private String type;
-    private String link;
-    private String datePlaying;
     //private String picturePath;
 
     public Movie() {
     }
 
-    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, List<Actor> actors, int duration, int year, List<String> genres, String imageLink, int rating, String type, String link, String datePlaying) {
-        //TODO: Change use seters
+    public Movie(String title, String description, String originalTitle, int duration, int year, String imageLink, int rating, String type) {
         this.title = title;
-        this.publishedDate = publishedDate;
         this.description = description;
         this.originalTitle = originalTitle;
-        this.director = director;
-        this.actors = actors;
         this.duration = duration;
         this.year = year;
-        this.genres = genres;
         this.imageLink = imageLink;
         this.rating = rating;
         this.type = type;
-        this.link = link;
-        this.datePlaying = datePlaying;
     }
 
-    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Director director, List<Actor> actors, int duration, int year, List<String> genres, String imageLink, int rating, String type, String link, String datePlaying) {
-        this(title, publishedDate, description, originalTitle, director, actors, duration, year, genres, imageLink, rating, type, link, datePlaying);
-        //TODO: Use setters
+    public Movie(int id, String title, String description, String originalTitle, int duration, int year, String imageLink, int rating, String type) {
+        this(title, description, originalTitle, duration, year, imageLink, rating, type);
         this.id = id;
     }
 
@@ -69,14 +57,6 @@ public class Movie {
         this.title = title;
     }
 
-    public LocalDateTime getPublishedDate() {
-        return publishedDate;
-    }
-
-    public void setPublishedDate(LocalDateTime publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -93,22 +73,6 @@ public class Movie {
         this.originalTitle = originalTitle;
     }
 
-    public Director getDirector() {
-        return director;
-    }
-
-    public void setDirector(Director director) {
-        this.director = director;
-    }
-
-    public List<Actor> getActors() {
-        return actors;
-    }
-
-    public void setActors(List<Actor> actors) {
-        this.actors = actors;
-    }
-
     public int getDuration() {
         return duration;
     }
@@ -123,14 +87,6 @@ public class Movie {
 
     public void setYear(int year) {
         this.year = year;
-    }
-
-    public List<String> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<String> genres) {
-        this.genres = genres;
     }
 
     public String getImageLink() {
@@ -157,22 +113,6 @@ public class Movie {
         this.type = type;
     }
 
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public String getDatePlaying() {
-        return datePlaying;
-    }
-
-    public void setDatePlaying(String datePlaying) {
-        this.datePlaying = datePlaying;
-    }
-
     @Override
     public int hashCode() {
         int hash = 3;
@@ -193,6 +133,12 @@ public class Movie {
         }
         final Movie other = (Movie) obj;
         return this.id == other.id;
+    }
+
+    @Override
+    public String toString() {
+        String shortDescription = description.length() > 20 ? description.substring(0, 20) : description;
+        return "id=" + id + ", " + title + ", " + shortDescription + ", " + originalTitle + ", " + duration + ", " + year + ", " + imageLink + ", " + rating + ", " + type;
     }
 
 }

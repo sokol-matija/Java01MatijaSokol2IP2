@@ -2,16 +2,11 @@ package hr.algebra.parsers;
 
 import hr.algebra.factory.ParserFactory;
 import hr.algebra.factory.UrlConnectionFactory;
-import hr.algebra.model.Actor;
-import hr.algebra.model.Director;
 import hr.algebra.model.Movie;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.xml.stream.XMLEventReader;
@@ -59,19 +54,19 @@ public class MovieParser {
     private enum TagType {
         ITEM("item"),
         TITLE("title"),
-        PUB_DATE("pubDate"),
+        //PUB_DATE("pubDate"),
         DESCRIPTION("description"),
         ORIGNAZIV("orignaziv"),
-        REDATELJ("redatelj"),
-        GLUMCI("glumci"),
+        //REDATELJ("redatelj"),
+        //GLUMCI("glumci"),
         TRAJANJE("trajanje"),
         GODINA("godina"),
-        ZANR("zanr"),
+        //ZANR("zanr"),
         PLAKAT("plakat"),
         RATING("rating"),
-        VRSTA("vrsta"),
-        LINK("link"),
-        DATUM_PRIKAZIVANJA("datumprikazivanja");
+        VRSTA("vrsta");
+        //LINK("link"),
+        //DATUM_PRIKAZIVANJA("datumprikazivanja");
 
         private final String name;
 
@@ -123,13 +118,13 @@ public class MovieParser {
                                         movie.setTitle(cleanData(data));
                                     }
                                     break;
-                                case PUB_DATE:
-                                    if (!data.isBlank()) {
-                                        movie.setPublishedDate(
-                                                LocalDateTime.parse(data, DateTimeFormatter.RFC_1123_DATE_TIME)
-                                        );
-                                    }
-                                    break;
+//                                case PUB_DATE:
+//                                    if (!data.isBlank()) {
+//                                        movie.setPublishedDate(
+//                                                LocalDateTime.parse(data, DateTimeFormatter.RFC_1123_DATE_TIME)
+//                                        );
+//                                    }
+//                                    break;
                                 //TODO: Add image to enum and Movie Class
                                 case DESCRIPTION:
                                     if (!data.isBlank()) {
@@ -146,42 +141,42 @@ public class MovieParser {
                                     }
                                     break;
                                 //TODO: Make Readatelj parser
-                                case REDATELJ:
-                                    if (!data.isBlank()) {
-                                        String cData = cleanData(data);
-                                        String[] details = cData.split(" ");
-                                        String firstName = details[0];
-                                        StringBuilder sb = new StringBuilder();
-                                        for (int i = 1; i < details.length; i++) {
-                                            sb.append(details[i]);
-                                        }
-                                        String lastName = sb.toString();
-                                        movie.setDirector(new Director(firstName, lastName));
-                                    }
-                                    break;
-                                //TODO: Make Glumci parser
-                                case GLUMCI:
-                                    if (!data.isBlank()) {
-                                        List<Actor> actorsList = new ArrayList<>();
-                                        String cData = cleanData(data);
-                                        String[] actorNames = cData.split(", ");
-                                        for (String actor : actorNames) {
-                                            String[] details = actor.split(" ");
-                                            String firstName = details[0];
-                                            if (details.length == 1) {
-                                                actorsList.add(new Actor(firstName));
-                                            }
-                                            StringBuilder sb = new StringBuilder();
-                                            for (int i = 1; i < details.length; i++) {
-                                                sb.append(details[i]);
-                                            }
-                                            String lastName = sb.toString();
-                                            actorsList.add(new Actor(firstName, lastName));
-                                            movie.setActors(actorsList);
-                                        }
-
-                                    }
-                                    break;
+//                                case REDATELJ:
+//                                    if (!data.isBlank()) {
+//                                        String cData = cleanData(data);
+//                                        String[] details = cData.split(" ");
+//                                        String firstName = details[0];
+//                                        StringBuilder sb = new StringBuilder();
+//                                        for (int i = 1; i < details.length; i++) {
+//                                            sb.append(details[i]);
+//                                        }
+//                                        String lastName = sb.toString();
+//                                        movie.setDirector(new Director(firstName, lastName));
+//                                    }
+//                                    break;
+//                                //TODO: Make Glumci parser
+//                                case GLUMCI:
+//                                    if (!data.isBlank()) {
+//                                        List<Actor> actorsList = new ArrayList<>();
+//                                        String cData = cleanData(data);
+//                                        String[] actorNames = cData.split(", ");
+//                                        for (String actor : actorNames) {
+//                                            String[] details = actor.split(" ");
+//                                            String firstName = details[0];
+//                                            if (details.length == 1) {
+//                                                actorsList.add(new Actor(firstName));
+//                                            }
+//                                            StringBuilder sb = new StringBuilder();
+//                                            for (int i = 1; i < details.length; i++) {
+//                                                sb.append(details[i]);
+//                                            }
+//                                            String lastName = sb.toString();
+//                                            actorsList.add(new Actor(firstName, lastName));
+//                                            movie.setActors(actorsList);
+//                                        }
+//
+//                                    }
+//                                    break;
                                 case TRAJANJE:
                                     if (!data.isBlank()) {
                                         movie.setDuration(Integer.parseInt(cleanData(data)));
@@ -194,13 +189,13 @@ public class MovieParser {
                                     break;
                                 //TODO: Make Zanr parser
 
-                                case ZANR:
-                                    if (!data.isBlank()) {
-                                        String cData = cleanData(data);
-                                        List<String> genres = Arrays.asList(cData.split("\\s*,\\s*"));
-                                        movie.setGenres(genres);
-                                    }
-                                    break;
+//                                case ZANR:
+//                                    if (!data.isBlank()) {
+//                                        String cData = cleanData(data);
+//                                        List<String> genres = Arrays.asList(cData.split("\\s*,\\s*"));
+//                                        movie.setGenres(genres);
+//                                    }
+//                                    break;
                                 case PLAKAT:
                                     if (!data.isBlank()) {
                                         String cDaga = cleanData(data);
@@ -218,20 +213,21 @@ public class MovieParser {
                                         // blank
                                         // premijera
                                         // matineja
+                                        movie.setType(data);
                                     }
                                     break;
                                 //TODO: Link and GUID the same remove one
-                                case LINK:
-                                    if (!data.isBlank()) {
-                                        movie.setLink(data);
-                                    }
-                                    break;
-                                //TODO: Set date in model
-                                case DATUM_PRIKAZIVANJA:
-                                    if (!data.isBlank()) {
-                                        movie.setDatePlaying(data);
-                                    }
-                                    break;
+//                                case LINK:
+//                                    if (!data.isBlank()) {
+//                                        movie.setLink(data);
+//                                    }
+//                                    break;
+//                                //TODO: Set date in model
+//                                case DATUM_PRIKAZIVANJA:
+//                                    if (!data.isBlank()) {
+//                                        movie.setDatePlaying(data);
+//                                    }
+//                                    break;
                                 //TODO: Link buy tickest choose sitting and hours when show starts could be multiple
                                 //<![CDATA[ <a href='https://karte.cinestarcinemas.ba/webticketnet/performance.aspx?oid=6F171000023PBWJEQC&coid=40000000014AKFBLFD'>16.55
                                 //</a>, <a href='https://karte.cinestarcinemas.ba/webticketnet/performance.aspx?oid=1C171000023PBWJEQC&coid=40000000014AKFBLFD'>19.00</a>,
