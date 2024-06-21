@@ -33,7 +33,6 @@ public class SqlRepository implements Repository {
     //private static final String LINK = "Link";
     //private static final String DATE_PLAYING = "DatePlaying";
 
-    //TODO: Update procedure with actor and director
     private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?)}";
     private static final String SELECT_MOVIE = "{ CALL selectMovie (?)}";
     private static final String SELECT_MOVIES = "{ CALL selectMovies }";

@@ -8,8 +8,6 @@ public class Movie {
     //Mon, 13 May 2024 22:00:00 GMT
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.RFC_1123_DATE_TIME;
 
-    //TODO: add actor list
-    //TODO: add director
     private int id;
     private String title;
     //private LocalDateTime publishedDate;
