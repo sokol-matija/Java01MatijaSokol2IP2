@@ -7,6 +7,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +21,7 @@ public class SqlRepository implements Repository {
     private static final String ID_MOVIE = "IDMovie";
     private static final String TITLE = "Title";
     //TODO: add publish date
-    //private static final String PUBLISHED_DATE = "PublishedDate";
+    private static final String PUBLISHED_DATE = "PublishedDate";
     private static final String DESCRIPTION = "Description";
     private static final String ORIGINAL_TITLE = "OriginalTitle";
     private static final String DIRECTOR = "Director";
@@ -33,7 +35,7 @@ public class SqlRepository implements Repository {
     //private static final String LINK = "Link";
     //private static final String DATE_PLAYING = "DatePlaying";
 
-    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?)}";
+    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?)}";
     private static final String SELECT_MOVIE = "{ CALL selectMovie (?)}";
     private static final String SELECT_MOVIES = "{ CALL selectMovies }";
 
@@ -42,6 +44,8 @@ public class SqlRepository implements Repository {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_MOVIE)) {
             stmt.setString(TITLE, movie.getTitle());
+            String formattedPublishedDate = movie.getPublishedDate().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+            stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
             stmt.setString(DESCRIPTION, movie.getDescription());
             stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
             List<Person> actors = movie.getActors();
@@ -68,6 +72,8 @@ public class SqlRepository implements Repository {
 
             for (Movie movie : movies) {
                 stmt.setString(TITLE, movie.getTitle());
+                String formattedPublishedDate = movie.getPublishedDate().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+                stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
                 stmt.setString(DESCRIPTION, movie.getDescription());
                 stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
                 List<Person> actors = movie.getActors();
@@ -112,6 +118,8 @@ public class SqlRepository implements Repository {
 
                     Person director = new Person(directorName);
 
+                    LocalDateTime publishedDate = rs.getTimestamp(PUBLISHED_DATE).toLocalDateTime(); // Convert Timestamp to LocalDateTime
+
                     List<Person> actors = Arrays.stream(actorsString.split(","))
                             .map(String::trim)
                             .map(Person::new)
@@ -120,6 +128,7 @@ public class SqlRepository implements Repository {
                     return Optional.of(new Movie(
                             rs.getInt(ID_MOVIE),
                             rs.getString(TITLE),
+                            publishedDate,
                             rs.getString(DESCRIPTION),
                             rs.getString(ORIGINAL_TITLE),
                             director,
@@ -150,6 +159,8 @@ public class SqlRepository implements Repository {
 
                 Person director = new Person(directorName);
 
+                LocalDateTime publishedDate = rs.getTimestamp(PUBLISHED_DATE).toLocalDateTime(); // Convert Timestamp to LocalDateTime
+
                 List<Person> actors = Arrays.stream(actorsString.split(","))
                         .map(String::trim)
                         .map(Person::new)
@@ -158,6 +169,7 @@ public class SqlRepository implements Repository {
                 movies.add(new Movie(
                         rs.getInt(ID_MOVIE),
                         rs.getString(TITLE),
+                        publishedDate,
                         rs.getString(DESCRIPTION),
                         rs.getString(ORIGINAL_TITLE),
                         director,

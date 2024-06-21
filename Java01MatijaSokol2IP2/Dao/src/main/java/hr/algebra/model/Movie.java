@@ -1,5 +1,6 @@
 package hr.algebra.model;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class Movie {
 
     private int id;
     private String title;
-    //private LocalDateTime publishedDate;
+    private LocalDateTime publishedDate;
     private String description;
     private String originalTitle;
     private Person director;
@@ -26,8 +27,9 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String title, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, String imageLink, int rating, String type) {
+    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, String imageLink, int rating, String type) {
         this.title = title;
+        this.publishedDate = publishedDate;
         this.description = description;
         this.originalTitle = originalTitle;
         this.director = director;
@@ -39,8 +41,8 @@ public class Movie {
         this.type = type;
     }
 
-    public Movie(int id, String title, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, String imageLink, int rating, String type) {
-        this(title, description, originalTitle, director, actors, duration, year, imageLink, rating, type);
+    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, String imageLink, int rating, String type) {
+        this(title, publishedDate, description, originalTitle, director, actors, duration, year, imageLink, rating, type);
         this.id = id;
     }
 
@@ -54,6 +56,14 @@ public class Movie {
 
     public String getTitle() {
         return title;
+    }
+
+    public LocalDateTime getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(LocalDateTime publishedDate) {
+        this.publishedDate = publishedDate;
     }
 
     public void setTitle(String title) {

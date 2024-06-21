@@ -7,6 +7,8 @@ import hr.algebra.model.Person;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +58,7 @@ public class MovieParser {
     private enum TagType {
         ITEM("item"),
         TITLE("title"),
-        //PUB_DATE("pubDate"),
+        PUB_DATE("pubDate"),
         DESCRIPTION("description"),
         ORIGNAZIV("orignaziv"),
         REDATELJ("redatelj"),
@@ -120,13 +122,13 @@ public class MovieParser {
                                         movie.setTitle(cleanData(data));
                                     }
                                     break;
-//                                case PUB_DATE:
-//                                    if (!data.isBlank()) {
-//                                        movie.setPublishedDate(
-//                                                LocalDateTime.parse(data, DateTimeFormatter.RFC_1123_DATE_TIME)
-//                                        );
-//                                    }
-//                                    break;
+                                case PUB_DATE:
+                                    if (!data.isBlank()) {
+                                        movie.setPublishedDate(
+                                                LocalDateTime.parse(data, DateTimeFormatter.RFC_1123_DATE_TIME)
+                                        );
+                                    }
+                                    break;
                                 //TODO: Add image to enum and Movie Class
                                 case DESCRIPTION:
                                     if (!data.isBlank()) {
