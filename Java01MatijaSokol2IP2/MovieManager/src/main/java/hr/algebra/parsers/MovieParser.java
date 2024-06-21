@@ -3,6 +3,7 @@ package hr.algebra.parsers;
 import hr.algebra.factory.ParserFactory;
 import hr.algebra.factory.UrlConnectionFactory;
 import hr.algebra.model.Movie;
+import hr.algebra.model.Person;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -57,8 +58,8 @@ public class MovieParser {
         //PUB_DATE("pubDate"),
         DESCRIPTION("description"),
         ORIGNAZIV("orignaziv"),
-        //REDATELJ("redatelj"),
-        //GLUMCI("glumci"),
+        REDATELJ("redatelj"),
+        GLUMCI("glumci"),
         TRAJANJE("trajanje"),
         GODINA("godina"),
         //ZANR("zanr"),
@@ -140,43 +141,23 @@ public class MovieParser {
                                         movie.setOriginalTitle(cleanData(data));
                                     }
                                     break;
-                                //TODO: Make Readatelj parser
-//                                case REDATELJ:
-//                                    if (!data.isBlank()) {
-//                                        String cData = cleanData(data);
-//                                        String[] details = cData.split(" ");
-//                                        String firstName = details[0];
-//                                        StringBuilder sb = new StringBuilder();
-//                                        for (int i = 1; i < details.length; i++) {
-//                                            sb.append(details[i]);
-//                                        }
-//                                        String lastName = sb.toString();
-//                                        movie.setDirector(new Director(firstName, lastName));
-//                                    }
-//                                    break;
-//                                //TODO: Make Glumci parser
-//                                case GLUMCI:
-//                                    if (!data.isBlank()) {
-//                                        List<Actor> actorsList = new ArrayList<>();
-//                                        String cData = cleanData(data);
-//                                        String[] actorNames = cData.split(", ");
-//                                        for (String actor : actorNames) {
-//                                            String[] details = actor.split(" ");
-//                                            String firstName = details[0];
-//                                            if (details.length == 1) {
-//                                                actorsList.add(new Actor(firstName));
-//                                            }
-//                                            StringBuilder sb = new StringBuilder();
-//                                            for (int i = 1; i < details.length; i++) {
-//                                                sb.append(details[i]);
-//                                            }
-//                                            String lastName = sb.toString();
-//                                            actorsList.add(new Actor(firstName, lastName));
-//                                            movie.setActors(actorsList);
-//                                        }
-//
-//                                    }
-//                                    break;
+                                case REDATELJ:
+                                    if (!data.isBlank()) {
+                                        String cData = cleanData(data);
+                                        movie.setDirector(new Person(cData));
+                                    }
+                                    break;
+                                case GLUMCI:
+                                    if (!data.isBlank()) {
+                                        List<Person> actorsList = new ArrayList<>();
+                                        String cData = cleanData(data);
+                                        String[] actorNames = cData.split(", ");
+                                        for (String actor : actorNames) {
+                                            actorsList.add(new Person(actor.trim()));
+                                        }
+                                        movie.setActors(actorsList);
+                                    }
+                                    break;
                                 case TRAJANJE:
                                     if (!data.isBlank()) {
                                         movie.setDuration(Integer.parseInt(cleanData(data)));
