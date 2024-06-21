@@ -1,6 +1,8 @@
 package hr.algebra.model;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Movie {
 
@@ -9,11 +11,11 @@ public class Movie {
 
     private int id;
     private String title;
-    //private LocalDateTime publishedDate;
+    private LocalDateTime publishedDate;
     private String description;
     private String originalTitle;
-    //private Director director;
-    //private List<Actor> actors;
+    private Person director;
+    private List<Person> actors;
     private int duration;
     private int year;
     //private List<String> genres;
@@ -25,10 +27,13 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String title, String description, String originalTitle, int duration, int year, String imageLink, int rating, String type) {
+    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, String imageLink, int rating, String type) {
         this.title = title;
+        this.publishedDate = publishedDate;
         this.description = description;
         this.originalTitle = originalTitle;
+        this.director = director;
+        this.actors = actors;
         this.duration = duration;
         this.year = year;
         this.imageLink = imageLink;
@@ -36,8 +41,8 @@ public class Movie {
         this.type = type;
     }
 
-    public Movie(int id, String title, String description, String originalTitle, int duration, int year, String imageLink, int rating, String type) {
-        this(title, description, originalTitle, duration, year, imageLink, rating, type);
+    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, String imageLink, int rating, String type) {
+        this(title, publishedDate, description, originalTitle, director, actors, duration, year, imageLink, rating, type);
         this.id = id;
     }
 
@@ -51,6 +56,14 @@ public class Movie {
 
     public String getTitle() {
         return title;
+    }
+
+    public LocalDateTime getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(LocalDateTime publishedDate) {
+        this.publishedDate = publishedDate;
     }
 
     public void setTitle(String title) {
@@ -71,6 +84,22 @@ public class Movie {
 
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
+    }
+
+    public Person getDirector() {
+        return director;
+    }
+
+    public void setDirector(Person director) {
+        this.director = director;
+    }
+
+    public List<Person> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Person> actors) {
+        this.actors = actors;
     }
 
     public int getDuration() {
@@ -138,7 +167,7 @@ public class Movie {
     @Override
     public String toString() {
         String shortDescription = description.length() > 20 ? description.substring(0, 20) : description;
-        return "id=" + id + ", " + title + ", " + shortDescription + ", " + originalTitle + ", " + duration + ", " + year + ", " + imageLink + ", " + rating + ", " + type;
+        return "id=" + id + ", " + title + ", " + shortDescription + ", " + originalTitle + ", " + director + ", " + actors + ", " + duration + ", " + year + ", " + imageLink + ", " + rating + ", " + type;
     }
 
 }

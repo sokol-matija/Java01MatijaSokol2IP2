@@ -2,24 +2,30 @@ package hr.algebra.dal.sql;
 
 import hr.algebra.dal.Repository;
 import hr.algebra.model.Movie;
+import hr.algebra.model.Person;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
 public class SqlRepository implements Repository {
 
     private static final String ID_MOVIE = "IDMovie";
     private static final String TITLE = "Title";
-    //private static final String PUBLISHED_DATE = "PublishedDate";
+    //TODO: add publish date
+    private static final String PUBLISHED_DATE = "PublishedDate";
     private static final String DESCRIPTION = "Description";
     private static final String ORIGINAL_TITLE = "OriginalTitle";
-    //private static final String DIRECTOR = "Director";
-    //private static final String ACTORS = "Actors";
+    private static final String DIRECTOR = "Director";
+    private static final String ACTORS = "Actors";
     private static final String DURATION = "Duration";
     private static final String YEAR = "Year";
     //private static final String GENRES = "Genres";
@@ -29,7 +35,7 @@ public class SqlRepository implements Repository {
     //private static final String LINK = "Link";
     //private static final String DATE_PLAYING = "DatePlaying";
 
-    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?)}";
+    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?)}";
     private static final String SELECT_MOVIE = "{ CALL selectMovie (?)}";
     private static final String SELECT_MOVIES = "{ CALL selectMovies }";
 
@@ -37,9 +43,17 @@ public class SqlRepository implements Repository {
     public int createMovie(Movie movie) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_MOVIE)) {
-            stmt.setString(TITLE, movie.getType());
+            stmt.setString(TITLE, movie.getTitle());
+            String formattedPublishedDate = movie.getPublishedDate().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+            stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
             stmt.setString(DESCRIPTION, movie.getDescription());
             stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
+            List<Person> actors = movie.getActors();
+            String actorsString = actors.stream()
+                    .map(Person::toString)
+                    .collect(Collectors.joining(","));
+            stmt.setString(ACTORS, actorsString);
+            stmt.setString(DIRECTOR, movie.getDirector().toString());
             stmt.setInt(DURATION, movie.getDuration());
             stmt.setInt(YEAR, movie.getYear());
             stmt.setString(IMAGE_LINK, movie.getImageLink());
@@ -58,8 +72,16 @@ public class SqlRepository implements Repository {
 
             for (Movie movie : movies) {
                 stmt.setString(TITLE, movie.getTitle());
+                String formattedPublishedDate = movie.getPublishedDate().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+                stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
                 stmt.setString(DESCRIPTION, movie.getDescription());
                 stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
+                List<Person> actors = movie.getActors();
+                String actorsString = actors.stream()
+                        .map(Person::toString)
+                        .collect(Collectors.joining(","));
+                stmt.setString(ACTORS, actorsString);
+                stmt.setString(DIRECTOR, movie.getDirector().toString());
                 stmt.setInt(DURATION, movie.getDuration());
                 stmt.setInt(YEAR, movie.getYear());
                 stmt.setString(IMAGE_LINK, movie.getImageLink());
@@ -67,6 +89,8 @@ public class SqlRepository implements Repository {
                 stmt.setString(TYPE, movie.getType());
                 stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
                 stmt.executeUpdate();
+                //TODO: Is this redundant? - Clear the param for next iter
+                stmt.clearParameters();
             }
         }
     }
@@ -88,16 +112,33 @@ public class SqlRepository implements Repository {
             stmt.setInt(ID_MOVIE, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
+
+                    String directorName = rs.getString(DIRECTOR);
+                    String actorsString = rs.getString(ACTORS);
+
+                    Person director = new Person(directorName);
+
+                    LocalDateTime publishedDate = rs.getTimestamp(PUBLISHED_DATE).toLocalDateTime(); // Convert Timestamp to LocalDateTime
+
+                    List<Person> actors = Arrays.stream(actorsString.split(","))
+                            .map(String::trim)
+                            .map(Person::new)
+                            .collect(Collectors.toList());
+
                     return Optional.of(new Movie(
                             rs.getInt(ID_MOVIE),
                             rs.getString(TITLE),
+                            publishedDate,
                             rs.getString(DESCRIPTION),
                             rs.getString(ORIGINAL_TITLE),
+                            director,
+                            actors,
                             rs.getInt(DURATION),
                             rs.getInt(YEAR),
                             rs.getString(IMAGE_LINK),
                             rs.getInt(RATING),
-                            rs.getString(TYPE)));
+                            rs.getString(TYPE)
+                    ));
                 }
             }
 
@@ -112,16 +153,33 @@ public class SqlRepository implements Repository {
         try (Connection con = dataSourc.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_MOVIES); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+
+                String directorName = rs.getString(DIRECTOR);
+                String actorsString = rs.getString(ACTORS);
+
+                Person director = new Person(directorName);
+
+                LocalDateTime publishedDate = rs.getTimestamp(PUBLISHED_DATE).toLocalDateTime(); // Convert Timestamp to LocalDateTime
+
+                List<Person> actors = Arrays.stream(actorsString.split(","))
+                        .map(String::trim)
+                        .map(Person::new)
+                        .collect(Collectors.toList());
+
                 movies.add(new Movie(
                         rs.getInt(ID_MOVIE),
                         rs.getString(TITLE),
+                        publishedDate,
                         rs.getString(DESCRIPTION),
                         rs.getString(ORIGINAL_TITLE),
+                        director,
+                        actors,
                         rs.getInt(DURATION),
                         rs.getInt(YEAR),
                         rs.getString(IMAGE_LINK),
                         rs.getInt(RATING),
-                        rs.getString(TYPE)));
+                        rs.getString(TYPE)
+                ));
             }
         }
         return movies;
