@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.xml.stream.XMLEventReader;
@@ -156,6 +157,8 @@ public class MovieParser {
                                             actorsList.add(new Person(actor.trim()));
                                         }
                                         movie.setActors(actorsList);
+                                    } else {
+                                        movie.setActors(Collections.emptyList()); // or handle null case as per your application logic
                                     }
                                     break;
                                 case TRAJANJE:

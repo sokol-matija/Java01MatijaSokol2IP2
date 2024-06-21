@@ -72,7 +72,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Name= " + name;
+        return name;
     }
 
 }
