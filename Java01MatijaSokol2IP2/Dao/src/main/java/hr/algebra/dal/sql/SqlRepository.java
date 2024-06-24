@@ -37,8 +37,11 @@ public class SqlRepository implements Repository {
     //private static final String DATE_PLAYING = "DatePlaying";
     //TODO: Add genre to database createmovie
     private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+    private static final String UPDATE_ARTICLE = "{ CALL updateMovie (?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     private static final String SELECT_MOVIE = "{ CALL selectMovie (?)}";
     private static final String SELECT_MOVIES = "{ CALL selectMovies }";
+    //TODO: Delete movie
+    //TODO: Update movie
 
     @Override
     public int createMovie(Movie movie) throws Exception {

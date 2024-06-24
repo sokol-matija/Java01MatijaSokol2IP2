@@ -72,6 +72,7 @@ public class MovieParser {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid genre: " + genreName);
         }
+        return null;
     }
 
     private MovieParser() {
