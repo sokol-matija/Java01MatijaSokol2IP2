@@ -9,6 +9,8 @@ import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.model.Movie;
 import hr.algebra.parsers.MovieParser;
 import hr.algebra.utilities.MessageUtils;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,6 +85,15 @@ public class UploadMoviesPanel extends javax.swing.JFrame {
     private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
         try {
             List<Movie> movies = MovieParser.parse();
+            //Testing parsers
+            for (Movie movie : movies) {
+                System.out.println(movie.getPublishedDate());
+                //TODO: format value from 2024-06-22T22:00 to Tue, 3 Jun 2008 11:05:30 GMT
+                ZonedDateTime publishedDate = ZonedDateTime.parse(movie.getPublishedDate() + ":00Z");
+                String formattedPublishedDate = publishedDate.format(DateTimeFormatter.RFC_1123_DATE_TIME);
+                System.out.println(formattedPublishedDate);
+            }
+            //TODO: Remove // after date impl
             repository.createMovies(movies);
             loadModel();
         } catch (Exception e) {

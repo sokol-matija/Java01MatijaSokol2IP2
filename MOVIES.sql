@@ -3,6 +3,9 @@ GO
 USE MOVIES
 GO
 
+use MOVIESTEST 
+
+
 --Directors
 CREATE TABLE Directors (
     ID INT PRIMARY KEY,

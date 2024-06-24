@@ -20,11 +20,11 @@ CREATE TABLE Movies (
 );
 go
 
-select * from movies
-go
+--select * from movies
+--go
 
-delete from movies
-go
+--delete from movies
+--go
 
 --Create Movie
 CREATE PROCEDURE createMovie

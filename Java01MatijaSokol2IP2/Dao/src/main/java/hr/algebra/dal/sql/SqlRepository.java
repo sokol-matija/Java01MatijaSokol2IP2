@@ -7,7 +7,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +44,8 @@ public class SqlRepository implements Repository {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_MOVIE)) {
             stmt.setString(TITLE, movie.getTitle());
-            String formattedPublishedDate = movie.getPublishedDate().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+            ZonedDateTime publishedDate = ZonedDateTime.parse(movie.getPublishedDate() + ":00Z");
+            String formattedPublishedDate = publishedDate.format(DateTimeFormatter.RFC_1123_DATE_TIME);
             stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
             stmt.setString(DESCRIPTION, movie.getDescription());
             stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
@@ -72,8 +73,11 @@ public class SqlRepository implements Repository {
 
             for (Movie movie : movies) {
                 stmt.setString(TITLE, movie.getTitle());
-                String formattedPublishedDate = movie.getPublishedDate().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+
+                ZonedDateTime publishedDate = ZonedDateTime.parse(movie.getPublishedDate() + ":00Z");
+                String formattedPublishedDate = publishedDate.format(DateTimeFormatter.RFC_1123_DATE_TIME);
                 stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
+
                 stmt.setString(DESCRIPTION, movie.getDescription());
                 stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
                 List<Person> actors = movie.getActors();
@@ -118,7 +122,7 @@ public class SqlRepository implements Repository {
 
                     Person director = new Person(directorName);
 
-                    LocalDateTime publishedDate = rs.getTimestamp(PUBLISHED_DATE).toLocalDateTime(); // Convert Timestamp to LocalDateTime
+                    ZonedDateTime publishedDate = ZonedDateTime.parse(rs.getString(PUBLISHED_DATE), DateTimeFormatter.RFC_1123_DATE_TIME);
 
                     List<Person> actors = Arrays.stream(actorsString.split(","))
                             .map(String::trim)
@@ -128,7 +132,7 @@ public class SqlRepository implements Repository {
                     return Optional.of(new Movie(
                             rs.getInt(ID_MOVIE),
                             rs.getString(TITLE),
-                            publishedDate,
+                            publishedDate.toLocalDateTime(),
                             rs.getString(DESCRIPTION),
                             rs.getString(ORIGINAL_TITLE),
                             director,
@@ -159,7 +163,7 @@ public class SqlRepository implements Repository {
 
                 Person director = new Person(directorName);
 
-                LocalDateTime publishedDate = rs.getTimestamp(PUBLISHED_DATE).toLocalDateTime(); // Convert Timestamp to LocalDateTime
+                ZonedDateTime publishedDate = ZonedDateTime.parse(rs.getString(PUBLISHED_DATE), DateTimeFormatter.RFC_1123_DATE_TIME);
 
                 List<Person> actors = Arrays.stream(actorsString.split(","))
                         .map(String::trim)
@@ -169,7 +173,7 @@ public class SqlRepository implements Repository {
                 movies.add(new Movie(
                         rs.getInt(ID_MOVIE),
                         rs.getString(TITLE),
-                        publishedDate,
+                        publishedDate.toLocalDateTime(),
                         rs.getString(DESCRIPTION),
                         rs.getString(ORIGINAL_TITLE),
                         director,
