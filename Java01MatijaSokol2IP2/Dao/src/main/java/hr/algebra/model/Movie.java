@@ -18,7 +18,7 @@ public class Movie {
     private List<Person> actors;
     private int duration;
     private int year;
-    //private List<String> genres;
+    private List<Genre> genres;
     private String imageLink;
     private int rating;
     private String type;
@@ -27,7 +27,7 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, String imageLink, int rating, String type) {
+    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type) {
         this.title = title;
         this.publishedDate = publishedDate;
         this.description = description;
@@ -36,13 +36,14 @@ public class Movie {
         this.actors = actors;
         this.duration = duration;
         this.year = year;
+        this.genres = genres;
         this.imageLink = imageLink;
         this.rating = rating;
         this.type = type;
     }
 
-    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, String imageLink, int rating, String type) {
-        this(title, publishedDate, description, originalTitle, director, actors, duration, year, imageLink, rating, type);
+    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type) {
+        this(title, publishedDate, description, originalTitle, director, actors, duration, year, genres, imageLink, rating, type);
         this.id = id;
     }
 
@@ -118,6 +119,14 @@ public class Movie {
         this.year = year;
     }
 
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
     public String getImageLink() {
         return imageLink;
     }
@@ -167,7 +176,7 @@ public class Movie {
     @Override
     public String toString() {
         String shortDescription = description.length() > 20 ? description.substring(0, 20) : description;
-        return "id=" + id + ", " + title + ", " + shortDescription + ", " + originalTitle + ", " + director + ", " + actors + ", " + duration + ", " + year + ", " + imageLink + ", " + rating + ", " + type;
+        return "id=" + id + ", " + title + ", " + shortDescription + ", " + originalTitle + ", " + director + ", " + actors + ", " + duration + ", " + year + genres + ", " + imageLink + ", " + rating + ", " + type;
     }
 
 }

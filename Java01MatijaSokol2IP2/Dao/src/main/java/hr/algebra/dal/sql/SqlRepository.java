@@ -1,6 +1,7 @@
 package hr.algebra.dal.sql;
 
 import hr.algebra.dal.Repository;
+import hr.algebra.model.Genre;
 import hr.algebra.model.Movie;
 import hr.algebra.model.Person;
 import java.sql.CallableStatement;
@@ -28,14 +29,14 @@ public class SqlRepository implements Repository {
     private static final String ACTORS = "Actors";
     private static final String DURATION = "Duration";
     private static final String YEAR = "Year";
-    //private static final String GENRES = "Genres";
+    private static final String GENRES = "Genres";
     private static final String IMAGE_LINK = "ImageLink";
     private static final String RATING = "Rating";
     private static final String TYPE = "Type";
     //private static final String LINK = "Link";
     //private static final String DATE_PLAYING = "DatePlaying";
-
-    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?)}";
+    //TODO: Add genre to database createmovie
+    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     private static final String SELECT_MOVIE = "{ CALL selectMovie (?)}";
     private static final String SELECT_MOVIES = "{ CALL selectMovies }";
 
@@ -57,6 +58,10 @@ public class SqlRepository implements Repository {
             stmt.setString(DIRECTOR, movie.getDirector().toString());
             stmt.setInt(DURATION, movie.getDuration());
             stmt.setInt(YEAR, movie.getYear());
+            String genresString = movie.getGenres().stream()
+                    .map(Genre::name)
+                    .collect(Collectors.joining(","));
+            stmt.setString(GENRES, genresString);
             stmt.setString(IMAGE_LINK, movie.getImageLink());
             stmt.setInt(RATING, movie.getRating());
             stmt.setString(TYPE, movie.getType());
@@ -88,6 +93,10 @@ public class SqlRepository implements Repository {
                 stmt.setString(DIRECTOR, movie.getDirector().toString());
                 stmt.setInt(DURATION, movie.getDuration());
                 stmt.setInt(YEAR, movie.getYear());
+                String genresString = movie.getGenres().stream()
+                        .map(Genre::name)
+                        .collect(Collectors.joining(","));
+                stmt.setString(GENRES, genresString);
                 stmt.setString(IMAGE_LINK, movie.getImageLink());
                 stmt.setInt(RATING, movie.getRating());
                 stmt.setString(TYPE, movie.getType());
@@ -129,6 +138,11 @@ public class SqlRepository implements Repository {
                             .map(Person::new)
                             .collect(Collectors.toList());
 
+                    List<Genre> genres = Arrays.stream(rs.getString(GENRES).split(","))
+                            .map(String::trim)
+                            .map(Genre::valueOf)
+                            .collect(Collectors.toList());
+
                     return Optional.of(new Movie(
                             rs.getInt(ID_MOVIE),
                             rs.getString(TITLE),
@@ -139,6 +153,7 @@ public class SqlRepository implements Repository {
                             actors,
                             rs.getInt(DURATION),
                             rs.getInt(YEAR),
+                            genres,
                             rs.getString(IMAGE_LINK),
                             rs.getInt(RATING),
                             rs.getString(TYPE)
@@ -170,6 +185,11 @@ public class SqlRepository implements Repository {
                         .map(Person::new)
                         .collect(Collectors.toList());
 
+                List<Genre> genres = Arrays.stream(rs.getString(GENRES).split(","))
+                        .map(String::trim)
+                        .map(Genre::valueOf)
+                        .collect(Collectors.toList());
+
                 movies.add(new Movie(
                         rs.getInt(ID_MOVIE),
                         rs.getString(TITLE),
@@ -180,6 +200,7 @@ public class SqlRepository implements Repository {
                         actors,
                         rs.getInt(DURATION),
                         rs.getInt(YEAR),
+                        genres,
                         rs.getString(IMAGE_LINK),
                         rs.getInt(RATING),
                         rs.getString(TYPE)
