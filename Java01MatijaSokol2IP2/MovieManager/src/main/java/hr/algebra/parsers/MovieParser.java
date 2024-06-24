@@ -2,6 +2,7 @@ package hr.algebra.parsers;
 
 import hr.algebra.factory.ParserFactory;
 import hr.algebra.factory.UrlConnectionFactory;
+import hr.algebra.model.Genre;
 import hr.algebra.model.Movie;
 import hr.algebra.model.Person;
 import java.io.IOException;
@@ -10,9 +11,11 @@ import java.net.HttpURLConnection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -52,6 +55,25 @@ public class MovieParser {
         return Jsoup.parse(cData).text();
     }
 
+    public static List<Genre> parseGenres(String cData) {
+        List<String> genreNames = Arrays.asList(cData.split("\\s*,\\s*"));
+        return genreNames.stream()
+                .map(MovieParser::mapToGenre)
+                .collect(Collectors.toList());
+    }
+
+    private static Genre mapToGenre(String genreName) {
+        try {
+            for (Genre genre : Genre.values()) {
+                if (genre.displayName.equalsIgnoreCase(genreName.trim())) {
+                    return genre;
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid genre: " + genreName);
+        }
+    }
+
     private MovieParser() {
     }
 
@@ -65,7 +87,7 @@ public class MovieParser {
         GLUMCI("glumci"),
         TRAJANJE("trajanje"),
         GODINA("godina"),
-        //ZANR("zanr"),
+        ZANR("zanr"),
         PLAKAT("plakat"),
         RATING("rating"),
         VRSTA("vrsta");
@@ -174,14 +196,15 @@ public class MovieParser {
                                     }
                                     break;
                                 //TODO: Make Zanr parser
-
-//                                case ZANR:
-//                                    if (!data.isBlank()) {
-//                                        String cData = cleanData(data);
-//                                        List<String> genres = Arrays.asList(cData.split("\\s*,\\s*"));
-//                                        movie.setGenres(genres);
-//                                    }
-//                                    break;
+                                case ZANR:
+                                    if (!data.isBlank()) {
+                                        String cData = cleanData(data);
+                                        List<Genre> genres = parseGenres(cData);
+                                        movie.setGenres(genres);
+                                    } else {
+                                        movie.setGenres(Collections.emptyList());
+                                    }
+                                    break;
                                 case PLAKAT:
                                     if (!data.isBlank()) {
                                         String cDaga = cleanData(data);

@@ -175,6 +175,7 @@ public class SqlRepository implements Repository {
 
                 String directorName = rs.getString(DIRECTOR);
                 String actorsString = rs.getString(ACTORS);
+                String genresString = rs.getString(GENRES);
 
                 Person director = new Person(directorName);
 
@@ -185,7 +186,7 @@ public class SqlRepository implements Repository {
                         .map(Person::new)
                         .collect(Collectors.toList());
 
-                List<Genre> genres = Arrays.stream(rs.getString(GENRES).split(","))
+                List<Genre> genres = Arrays.stream(genresString.split(","))
                         .map(String::trim)
                         .map(Genre::valueOf)
                         .collect(Collectors.toList());

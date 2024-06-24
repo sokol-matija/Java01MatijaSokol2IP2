@@ -4,6 +4,7 @@ public enum Genre {
 
     ACTION("Akcija"),
     ACTION2("Akcijski"),
+    ACTION_COMEDY("Akcijska komedija"),
     COMEDY("Komedija"),
     DRAMA("Drama"),
     CRIME_DRAMA("Krimi drama"),
@@ -16,7 +17,7 @@ public enum Genre {
     THRILLER("Triler"),
     EPIC_WESTERN("Epski vestern");
 
-    private final String displayName;
+    public final String displayName;
 
     private Genre(String displayName) {
         this.displayName = displayName;
