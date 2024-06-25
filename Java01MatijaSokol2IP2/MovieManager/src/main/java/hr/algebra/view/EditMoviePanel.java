@@ -1,19 +1,19 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package hr.algebra.view;
 
 /**
  *
- * @author Matija
+ * @author msokol
  */
-public class EditMoviesPanel extends javax.swing.JFrame {
+public class EditMoviePanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form EditMoviesPanel
+     * Creates new form EditMoviePanel
      */
-    public EditMoviesPanel() {
+    public EditMoviePanel() {
         initComponents();
     }
 
@@ -26,19 +26,6 @@ public class EditMoviesPanel extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
-        tbOriginalTitle = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        tbPublishedDate = new javax.swing.JTextField();
-        cbDatePlaying = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        tbDirector = new javax.swing.JTextField();
-        lbImage = new javax.swing.JLabel();
-        lbDescription = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        tbTitle = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbActor = new javax.swing.JTextArea();
@@ -48,43 +35,27 @@ public class EditMoviesPanel extends javax.swing.JFrame {
         tbYear = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         tbRating = new javax.swing.JTextField();
+        tbOriginalTitle = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         tbType = new javax.swing.JTextField();
+        tbPublishedDate = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
+        cbDatePlaying = new javax.swing.JTextField();
         lblID = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         lblIDShow = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbMovies = new javax.swing.JTable();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1200, 780));
-
-        jLabel2.setText("Original Title");
-
-        tbOriginalTitle.setText("jTextField1");
-
-        jLabel3.setText("Published Date:");
-
-        tbPublishedDate.setText("jTextField1");
-
-        cbDatePlaying.setText("jTextField1");
-
-        jLabel4.setText("Date Playing");
-
-        jLabel5.setText("Director");
-
-        tbDirector.setText("jTextField1");
-
-        lbImage.setText("jLabel6");
-
-        lbDescription.setText("jTextField6");
-
-        jLabel7.setText("Title:");
-
-        tbTitle.setText("jTextField1");
-
-        jLabel1.setText("Description");
+        tbDirector = new javax.swing.JTextField();
+        lbImage = new javax.swing.JLabel();
+        lbDescription = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        tbTitle = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         jLabel8.setText("Actors");
 
@@ -104,15 +75,29 @@ public class EditMoviesPanel extends javax.swing.JFrame {
 
         jLabel11.setText("Genres");
 
+        jLabel2.setText("Original Title");
+
         tbRating.setText("jTextField1");
+
+        tbOriginalTitle.setText("jTextField1");
 
         jLabel12.setText("Rating");
 
+        jLabel3.setText("Published Date:");
+
         tbType.setText("jTextField1");
+
+        tbPublishedDate.setText("jTextField1");
 
         jLabel13.setText("Type");
 
+        cbDatePlaying.setText("jTextField1");
+
         lblID.setText("ID");
+
+        jLabel4.setText("Date Playing");
+
+        jLabel5.setText("Director");
 
         lblIDShow.setText("jLabel15");
 
@@ -129,8 +114,20 @@ public class EditMoviesPanel extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tbMovies);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        tbDirector.setText("jTextField1");
+
+        lbImage.setText("jLabel6");
+
+        lbDescription.setText("jTextField6");
+
+        jLabel7.setText("Title:");
+
+        tbTitle.setText("jTextField1");
+
+        jLabel1.setText("Description");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -269,10 +266,8 @@ public class EditMoviesPanel extends javax.swing.JFrame {
                         .addComponent(lbImage, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(38, 38, 38)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     /**

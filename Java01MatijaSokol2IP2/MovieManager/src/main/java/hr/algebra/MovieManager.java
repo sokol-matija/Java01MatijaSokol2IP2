@@ -4,6 +4,9 @@
  */
 package hr.algebra;
 
+import hr.algebra.view.EditMoviePanel;
+import hr.algebra.view.UploadMoviesPanel;
+
 /**
  *
  * @author Matija
@@ -92,7 +95,7 @@ public class MovieManager extends javax.swing.JFrame {
 
     private void configurePanels() {
         //TODO: EditMoviePanel create and add
-        //tpContent.add(UPLOAD_PANEL, new UploadMoviesPanel());
-        // tpContent.add(EDIT_PANEL, new EditMoviesPanel());
+        tpContent.add(UPLOAD_PANEL, new UploadMoviesPanel());
+        tpContent.add(EDIT_PANEL, new EditMoviePanel());
     }
 }
