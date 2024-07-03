@@ -15,7 +15,7 @@ public class MessageUtils {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void showConfirmationMessage(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+    public static boolean showConfirmationMessage(String title, String message) {
+        return JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION;
     }
 }

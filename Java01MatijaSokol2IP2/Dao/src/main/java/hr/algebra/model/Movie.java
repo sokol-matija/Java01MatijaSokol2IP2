@@ -22,12 +22,12 @@ public class Movie {
     private String imageLink;
     private int rating;
     private String type;
-    //private String picturePath;
+    private String picturePath;
 
     public Movie() {
     }
 
-    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type) {
+    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type, String picturePath) {
         this.title = title;
         this.publishedDate = publishedDate;
         this.description = description;
@@ -40,10 +40,11 @@ public class Movie {
         this.imageLink = imageLink;
         this.rating = rating;
         this.type = type;
+        this.picturePath = picturePath;
     }
 
-    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type) {
-        this(title, publishedDate, description, originalTitle, director, actors, duration, year, genres, imageLink, rating, type);
+    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type, String picturePath) {
+        this(title, publishedDate, description, originalTitle, director, actors, duration, year, genres, imageLink, rating, type, picturePath);
         this.id = id;
     }
 
@@ -149,6 +150,14 @@ public class Movie {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getPicturePath() {
+        return picturePath;
+    }
+
+    public void setPicturePath(String picturePath) {
+        this.picturePath = picturePath;
     }
 
     @Override

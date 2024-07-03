@@ -79,12 +79,11 @@ public class UploadMoviesPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_btnUploadActionPerformed
+    }
 
     /**
      * @param args the command line arguments
      */
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnUpload;
     private javax.swing.JScrollPane jScrollPane1;
@@ -103,6 +102,7 @@ public class UploadMoviesPanel extends javax.swing.JPanel {
         }
     }
 
+    //TODO: Posible erro here debug
     private void loadModel() throws Exception {
         List<Movie> movies = repository.selectMovies();
         movieModel.clear();

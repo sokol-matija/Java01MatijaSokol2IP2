@@ -33,11 +33,12 @@ public class SqlRepository implements Repository {
     private static final String IMAGE_LINK = "ImageLink";
     private static final String RATING = "Rating";
     private static final String TYPE = "Type";
+    private static final String PICTURE_PATH = "PicturePath";
     //private static final String LINK = "Link";
     //private static final String DATE_PLAYING = "DatePlaying";
     //TODO: Add genre to database createmovie
-    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?,?)}";
-    private static final String UPDATE_ARTICLE = "{ CALL updateMovie (?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+    private static final String UPDATE_MOVIE = "{ CALL updateMovie (?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     private static final String SELECT_MOVIE = "{ CALL selectMovie (?)}";
     private static final String SELECT_MOVIES = "{ CALL selectMovies }";
     //TODO: Delete movie
@@ -68,6 +69,7 @@ public class SqlRepository implements Repository {
             stmt.setString(IMAGE_LINK, movie.getImageLink());
             stmt.setInt(RATING, movie.getRating());
             stmt.setString(TYPE, movie.getType());
+            stmt.setString(PICTURE_PATH, movie.getPicturePath());
             stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
             stmt.executeUpdate();
             return stmt.getInt(ID_MOVIE);
@@ -103,6 +105,7 @@ public class SqlRepository implements Repository {
                 stmt.setString(IMAGE_LINK, movie.getImageLink());
                 stmt.setInt(RATING, movie.getRating());
                 stmt.setString(TYPE, movie.getType());
+                stmt.setString(PICTURE_PATH, movie.getPicturePath());
                 stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
                 stmt.executeUpdate();
                 //TODO: Is this redundant? - Clear the param for next iter
@@ -112,13 +115,49 @@ public class SqlRepository implements Repository {
     }
 
     @Override
-    public void updateMovie(int id, Movie data) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void updateMovie(int id, Movie movie) throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_MOVIE)) {
+            stmt.setString(TITLE, movie.getTitle());
+
+            ZonedDateTime publishedDate = ZonedDateTime.parse(movie.getPublishedDate() + ":00Z");
+            String formattedPublishedDate = publishedDate.format(DateTimeFormatter.RFC_1123_DATE_TIME);
+            stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
+
+            stmt.setString(DESCRIPTION, movie.getDescription());
+            stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
+
+            List<Person> actors = movie.getActors();
+            String actorsString = actors.stream()
+                    .map(Person::toString)
+                    .collect(Collectors.joining(","));
+
+            stmt.setString(ACTORS, actorsString);
+            stmt.setString(DIRECTOR, movie.getDirector().toString());
+            stmt.setInt(DURATION, movie.getDuration());
+            stmt.setInt(YEAR, movie.getYear());
+
+            String genresString = movie.getGenres().stream()
+                    .map(Genre::name)
+                    .collect(Collectors.joining(","));
+            stmt.setString(GENRES, genresString);
+
+            stmt.setString(IMAGE_LINK, movie.getImageLink());
+            stmt.setInt(RATING, movie.getRating());
+            stmt.setString(TYPE, movie.getType());
+            stmt.setString(PICTURE_PATH, movie.getPicturePath());
+            stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
+            stmt.executeUpdate();
+        }
     }
 
     @Override
     public void deleteMovie(int id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_MOVIE)) {
+            stmt.setInt(ID_MOVIE, id);
+            stmt.executeUpdate();
+        }
     }
 
     @Override
@@ -159,7 +198,8 @@ public class SqlRepository implements Repository {
                             genres,
                             rs.getString(IMAGE_LINK),
                             rs.getInt(RATING),
-                            rs.getString(TYPE)
+                            rs.getString(TYPE),
+                            rs.getString(PICTURE_PATH)
                     ));
                 }
             }
@@ -207,7 +247,8 @@ public class SqlRepository implements Repository {
                         genres,
                         rs.getString(IMAGE_LINK),
                         rs.getInt(RATING),
-                        rs.getString(TYPE)
+                        rs.getString(TYPE),
+                        rs.getString(PICTURE_PATH)
                 ));
             }
         }
