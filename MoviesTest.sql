@@ -3,6 +3,7 @@ go
 
 USE MOVIETEST04; -- Use the database where you want to create the schema
 go
+
 -- Drop the Movies table if it exists
 IF OBJECT_ID('dbo.Movies', 'U') IS NOT NULL
     DROP TABLE dbo.Movies;
@@ -23,7 +24,43 @@ IF OBJECT_ID('dbo.selectMovies', 'P') IS NOT NULL
     DROP PROCEDURE dbo.selectMovies;
 GO
 
+--User and Role Table
+CREATE TABLE roles (
+    IDRoles INT PRIMARY KEY IDENTITY,
+    Name NVARCHAR(50) UNIQUE NOT NULL
+);
+go
 
+CREATE TABLE users (
+    IDUser INT PRIMARY KEY IDENTITY,
+    Username NVARCHAR(255) UNIQUE NOT NULL,
+    Password NVARCHAR(255) NOT NULL,
+    Role_id INT,
+    FOREIGN KEY (Role_id) REFERENCES roles(IDRoles)
+);
+go
+
+
+-- Insert roles
+INSERT INTO roles (name) VALUES ('USER'), ('ADMIN');
+go
+-- Insert an admin user
+INSERT INTO users (username, password, role_id) VALUES ('admin', 'admin', (SELECT IDRoles FROM roles WHERE name='ADMIN'));
+go
+-- Insert a regular user
+INSERT INTO users (username, password, role_id) VALUES ('user', 'user', (SELECT IDRoles FROM roles WHERE name='USER'));
+go
+ -- Show users
+ SELECT * FROM users
+ go
+
+ 
+ -- Testing prepared java statement
+ select u.Username, u.Password, roles.Name 
+ from users as u
+ join roles on u.Role_id = roles.IDRoles
+ where u.Username = 'user' and u.Password = 'user'
+ go
 
 -- Create the Movies table
 CREATE TABLE dbo.Movies (
@@ -90,7 +127,7 @@ END;
 GO
 
 
---Select all Movies7
+--Select all Movies
 SELECT * FROM MOVIES
 
 delete from movies
