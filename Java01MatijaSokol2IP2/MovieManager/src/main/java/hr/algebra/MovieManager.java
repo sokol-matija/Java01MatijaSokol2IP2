@@ -4,6 +4,9 @@
  */
 package hr.algebra;
 
+import hr.algebra.dal.sql.DatabaseInitilizer;
+import hr.algebra.view.LoginPanel;
+
 /**
  *
  * @author Matija
@@ -14,7 +17,9 @@ public class MovieManager extends javax.swing.JFrame {
      * Creates new form MovieManager
      */
     public MovieManager() {
+        DatabaseInitilizer.runScript();
         initComponents();
+        loggInPanel();
         configurePanels();
     }
 
@@ -50,6 +55,7 @@ public class MovieManager extends javax.swing.JFrame {
 
     private static final String UPLOAD_PANEL = "Upload movies";
     private static final String EDIT_PANEL = "Edit movies";
+    private static final String LOGG_IN = "login";
 
     /**
      * @param args the command line arguments
@@ -91,8 +97,11 @@ public class MovieManager extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void configurePanels() {
-        //TODO: EditMoviePanel create and add
         //tpContent.add(UPLOAD_PANEL, new UploadMoviesPanel());
-        // tpContent.add(EDIT_PANEL, new EditMoviesPanel());
+        //tpContent.add(EDIT_PANEL, new EditMoviePanel());
+    }
+
+    private void loggInPanel() {
+        tpContent.add(LOGG_IN, new LoginPanel());
     }
 }

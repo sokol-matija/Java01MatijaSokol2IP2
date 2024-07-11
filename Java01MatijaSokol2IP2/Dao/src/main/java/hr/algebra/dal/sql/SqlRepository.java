@@ -1,13 +1,14 @@
 package hr.algebra.dal.sql;
 
 import hr.algebra.dal.Repository;
+import hr.algebra.model.Genre;
 import hr.algebra.model.Movie;
 import hr.algebra.model.Person;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,23 +29,28 @@ public class SqlRepository implements Repository {
     private static final String ACTORS = "Actors";
     private static final String DURATION = "Duration";
     private static final String YEAR = "Year";
-    //private static final String GENRES = "Genres";
+    private static final String GENRES = "Genres";
     private static final String IMAGE_LINK = "ImageLink";
     private static final String RATING = "Rating";
     private static final String TYPE = "Type";
+    private static final String PICTURE_PATH = "PicturePath";
     //private static final String LINK = "Link";
     //private static final String DATE_PLAYING = "DatePlaying";
-
-    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?)}";
+    //TODO: Add genre to database createmovie
+    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+    private static final String UPDATE_MOVIE = "{ CALL updateMovie (?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     private static final String SELECT_MOVIE = "{ CALL selectMovie (?)}";
     private static final String SELECT_MOVIES = "{ CALL selectMovies }";
+    //TODO: Delete movie
+    //TODO: Update movie
 
     @Override
     public int createMovie(Movie movie) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_MOVIE)) {
             stmt.setString(TITLE, movie.getTitle());
-            String formattedPublishedDate = movie.getPublishedDate().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+            ZonedDateTime publishedDate = ZonedDateTime.parse(movie.getPublishedDate() + ":00Z");
+            String formattedPublishedDate = publishedDate.format(DateTimeFormatter.RFC_1123_DATE_TIME);
             stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
             stmt.setString(DESCRIPTION, movie.getDescription());
             stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
@@ -56,9 +62,14 @@ public class SqlRepository implements Repository {
             stmt.setString(DIRECTOR, movie.getDirector().toString());
             stmt.setInt(DURATION, movie.getDuration());
             stmt.setInt(YEAR, movie.getYear());
+            String genresString = movie.getGenres().stream()
+                    .map(Genre::name)
+                    .collect(Collectors.joining(","));
+            stmt.setString(GENRES, genresString);
             stmt.setString(IMAGE_LINK, movie.getImageLink());
             stmt.setInt(RATING, movie.getRating());
             stmt.setString(TYPE, movie.getType());
+            stmt.setString(PICTURE_PATH, movie.getPicturePath());
             stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
             stmt.executeUpdate();
             return stmt.getInt(ID_MOVIE);
@@ -72,8 +83,11 @@ public class SqlRepository implements Repository {
 
             for (Movie movie : movies) {
                 stmt.setString(TITLE, movie.getTitle());
-                String formattedPublishedDate = movie.getPublishedDate().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+
+                ZonedDateTime publishedDate = ZonedDateTime.parse(movie.getPublishedDate() + ":00Z");
+                String formattedPublishedDate = publishedDate.format(DateTimeFormatter.RFC_1123_DATE_TIME);
                 stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
+
                 stmt.setString(DESCRIPTION, movie.getDescription());
                 stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
                 List<Person> actors = movie.getActors();
@@ -84,9 +98,14 @@ public class SqlRepository implements Repository {
                 stmt.setString(DIRECTOR, movie.getDirector().toString());
                 stmt.setInt(DURATION, movie.getDuration());
                 stmt.setInt(YEAR, movie.getYear());
+                String genresString = movie.getGenres().stream()
+                        .map(Genre::name)
+                        .collect(Collectors.joining(","));
+                stmt.setString(GENRES, genresString);
                 stmt.setString(IMAGE_LINK, movie.getImageLink());
                 stmt.setInt(RATING, movie.getRating());
                 stmt.setString(TYPE, movie.getType());
+                stmt.setString(PICTURE_PATH, movie.getPicturePath());
                 stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
                 stmt.executeUpdate();
                 //TODO: Is this redundant? - Clear the param for next iter
@@ -96,13 +115,49 @@ public class SqlRepository implements Repository {
     }
 
     @Override
-    public void updateMovie(int id, Movie data) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void updateMovie(int id, Movie movie) throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_MOVIE)) {
+            stmt.setString(TITLE, movie.getTitle());
+
+            ZonedDateTime publishedDate = ZonedDateTime.parse(movie.getPublishedDate() + ":00Z");
+            String formattedPublishedDate = publishedDate.format(DateTimeFormatter.RFC_1123_DATE_TIME);
+            stmt.setString(PUBLISHED_DATE, formattedPublishedDate);
+
+            stmt.setString(DESCRIPTION, movie.getDescription());
+            stmt.setString(ORIGINAL_TITLE, movie.getOriginalTitle());
+
+            List<Person> actors = movie.getActors();
+            String actorsString = actors.stream()
+                    .map(Person::toString)
+                    .collect(Collectors.joining(","));
+
+            stmt.setString(ACTORS, actorsString);
+            stmt.setString(DIRECTOR, movie.getDirector().toString());
+            stmt.setInt(DURATION, movie.getDuration());
+            stmt.setInt(YEAR, movie.getYear());
+
+            String genresString = movie.getGenres().stream()
+                    .map(Genre::name)
+                    .collect(Collectors.joining(","));
+            stmt.setString(GENRES, genresString);
+
+            stmt.setString(IMAGE_LINK, movie.getImageLink());
+            stmt.setInt(RATING, movie.getRating());
+            stmt.setString(TYPE, movie.getType());
+            stmt.setString(PICTURE_PATH, movie.getPicturePath());
+            stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
+            stmt.executeUpdate();
+        }
     }
 
     @Override
     public void deleteMovie(int id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_MOVIE)) {
+            stmt.setInt(ID_MOVIE, id);
+            stmt.executeUpdate();
+        }
     }
 
     @Override
@@ -118,26 +173,33 @@ public class SqlRepository implements Repository {
 
                     Person director = new Person(directorName);
 
-                    LocalDateTime publishedDate = rs.getTimestamp(PUBLISHED_DATE).toLocalDateTime(); // Convert Timestamp to LocalDateTime
+                    ZonedDateTime publishedDate = ZonedDateTime.parse(rs.getString(PUBLISHED_DATE), DateTimeFormatter.RFC_1123_DATE_TIME);
 
                     List<Person> actors = Arrays.stream(actorsString.split(","))
                             .map(String::trim)
                             .map(Person::new)
                             .collect(Collectors.toList());
 
+                    List<Genre> genres = Arrays.stream(rs.getString(GENRES).split(","))
+                            .map(String::trim)
+                            .map(Genre::valueOf)
+                            .collect(Collectors.toList());
+
                     return Optional.of(new Movie(
                             rs.getInt(ID_MOVIE),
                             rs.getString(TITLE),
-                            publishedDate,
+                            publishedDate.toLocalDateTime(),
                             rs.getString(DESCRIPTION),
                             rs.getString(ORIGINAL_TITLE),
                             director,
                             actors,
                             rs.getInt(DURATION),
                             rs.getInt(YEAR),
+                            genres,
                             rs.getString(IMAGE_LINK),
                             rs.getInt(RATING),
-                            rs.getString(TYPE)
+                            rs.getString(TYPE),
+                            rs.getString(PICTURE_PATH)
                     ));
                 }
             }
@@ -156,29 +218,37 @@ public class SqlRepository implements Repository {
 
                 String directorName = rs.getString(DIRECTOR);
                 String actorsString = rs.getString(ACTORS);
+                String genresString = rs.getString(GENRES);
 
                 Person director = new Person(directorName);
 
-                LocalDateTime publishedDate = rs.getTimestamp(PUBLISHED_DATE).toLocalDateTime(); // Convert Timestamp to LocalDateTime
+                ZonedDateTime publishedDate = ZonedDateTime.parse(rs.getString(PUBLISHED_DATE), DateTimeFormatter.RFC_1123_DATE_TIME);
 
                 List<Person> actors = Arrays.stream(actorsString.split(","))
                         .map(String::trim)
                         .map(Person::new)
                         .collect(Collectors.toList());
 
+                List<Genre> genres = Arrays.stream(genresString.split(","))
+                        .map(String::trim)
+                        .map(Genre::valueOf)
+                        .collect(Collectors.toList());
+
                 movies.add(new Movie(
                         rs.getInt(ID_MOVIE),
                         rs.getString(TITLE),
-                        publishedDate,
+                        publishedDate.toLocalDateTime(),
                         rs.getString(DESCRIPTION),
                         rs.getString(ORIGINAL_TITLE),
                         director,
                         actors,
                         rs.getInt(DURATION),
                         rs.getInt(YEAR),
+                        genres,
                         rs.getString(IMAGE_LINK),
                         rs.getInt(RATING),
-                        rs.getString(TYPE)
+                        rs.getString(TYPE),
+                        rs.getString(PICTURE_PATH)
                 ));
             }
         }

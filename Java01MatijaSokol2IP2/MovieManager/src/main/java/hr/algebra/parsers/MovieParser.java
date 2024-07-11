@@ -2,17 +2,25 @@ package hr.algebra.parsers;
 
 import hr.algebra.factory.ParserFactory;
 import hr.algebra.factory.UrlConnectionFactory;
+import hr.algebra.model.Genre;
 import hr.algebra.model.Movie;
 import hr.algebra.model.Person;
+import hr.algebra.utilities.FileUtils;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -52,6 +60,42 @@ public class MovieParser {
         return Jsoup.parse(cData).text();
     }
 
+    public static List<Genre> parseGenres(String cData) {
+        List<String> genreNames = Arrays.asList(cData.split("\\s*,\\s*"));
+        return genreNames.stream()
+                .map(MovieParser::mapToGenre)
+                .collect(Collectors.toList());
+    }
+
+    public static Genre mapToGenre(String genreName) {
+        try {
+            for (Genre genre : Genre.values()) {
+                if (genre.displayName.equalsIgnoreCase(genreName.trim())) {
+                    return genre;
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid genre: " + genreName);
+        }
+        return null;
+    }
+
+    private static void handleImage(Movie movie, String imageLink) {
+        try {
+            String ext = imageLink.substring(imageLink.lastIndexOf("."));
+            if (ext.length() > 4) {
+                ext = EXT;
+            }
+            String imageName = UUID.randomUUID() + ext;
+            String localImagePath = DIR + File.separator + imageName;
+
+            FileUtils.copyFromUrl(imageLink, localImagePath);
+            movie.setPicturePath(localImagePath);
+        } catch (IOException ex) {
+            Logger.getLogger(MovieParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private MovieParser() {
     }
 
@@ -65,7 +109,7 @@ public class MovieParser {
         GLUMCI("glumci"),
         TRAJANJE("trajanje"),
         GODINA("godina"),
-        //ZANR("zanr"),
+        ZANR("zanr"),
         PLAKAT("plakat"),
         RATING("rating"),
         VRSTA("vrsta");
@@ -124,9 +168,19 @@ public class MovieParser {
                                     break;
                                 case PUB_DATE:
                                     if (!data.isBlank()) {
-                                        movie.setPublishedDate(
-                                                LocalDateTime.parse(data, DateTimeFormatter.RFC_1123_DATE_TIME)
-                                        );
+                                        if ("Fri, 28 Jun 2024 22:00:".equals(data)) {
+                                            //movie.setPublishedDate(
+                                            //      LocalDateTime.parse("Fri, 28 Jun 2024 22:00:00 GMT", DateTimeFormatter.RFC_1123_DATE_TIME));
+                                            continue;
+                                        }
+                                        if ("00 GMT".equals(data)) {
+                                            movie.setPublishedDate(
+                                                    LocalDateTime.parse("Fri, 28 Jun 2024 22:00:00 GMT", DateTimeFormatter.RFC_1123_DATE_TIME));
+                                        } else {
+                                            movie.setPublishedDate(
+                                                    LocalDateTime.parse(data, DateTimeFormatter.RFC_1123_DATE_TIME));
+                                        }
+
                                     }
                                     break;
                                 //TODO: Add image to enum and Movie Class
@@ -135,8 +189,11 @@ public class MovieParser {
                                         String cData = cleanDescriptionData(data);
                                         movie.setDescription(cData);
 
-                                        String imgURL = getImgURL(cData);
-                                        movie.setImageLink(imgURL);
+                                        //TODO: Remove this
+                                        //String imgURL = getImgURL(cData);
+                                        //movie.setImageLink(imgURL);
+                                        //TODO: Remove this
+                                        //handleImage(movie, imgURL);
                                     }
                                     break;
                                 case ORIGNAZIV:
@@ -174,19 +231,20 @@ public class MovieParser {
                                     }
                                     break;
                                 //TODO: Make Zanr parser
-
-//                                case ZANR:
-//                                    if (!data.isBlank()) {
-//                                        String cData = cleanData(data);
-//                                        List<String> genres = Arrays.asList(cData.split("\\s*,\\s*"));
-//                                        movie.setGenres(genres);
-//                                    }
-//                                    break;
+                                case ZANR:
+                                    if (!data.isBlank()) {
+                                        String cData = cleanData(data);
+                                        List<Genre> genres = parseGenres(cData);
+                                        movie.setGenres(genres);
+                                    } else {
+                                        movie.setGenres(Collections.emptyList());
+                                    }
+                                    break;
                                 case PLAKAT:
                                     if (!data.isBlank()) {
-                                        String cDaga = cleanData(data);
-                                        movie.setImageLink(cDaga);
-
+                                        String cData = cleanData(data);
+                                        movie.setImageLink(cData);
+                                        handleImage(movie, cData);
                                     }
                                     break;
                                 case RATING:
@@ -203,7 +261,7 @@ public class MovieParser {
                                     }
                                     break;
                                 //TODO: Link and GUID the same remove one
-//                                case LINK:
+                                //                               case LINK:
 //                                    if (!data.isBlank()) {
 //                                        movie.setLink(data);
 //                                    }
