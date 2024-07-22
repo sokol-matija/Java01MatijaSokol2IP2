@@ -1,7 +1,10 @@
 package hr.algebra.view.model;
 
 import hr.algebra.model.Movie;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.table.AbstractTableModel;
 
 public class MovieTableModel extends AbstractTableModel {
@@ -15,7 +18,10 @@ public class MovieTableModel extends AbstractTableModel {
     }
 
     public void setMovies(List<Movie> movies) {
-        this.movies = movies;
+        this.movies = movies.stream()
+                .sorted(Comparator.comparingInt(Movie::getId))
+                .collect(Collectors.toList());
+        fireTableDataChanged();
     }
 
     //
@@ -37,8 +43,7 @@ public class MovieTableModel extends AbstractTableModel {
             case 1:
                 return movies.get(rowIndex).getTitle();
             case 2:
-                return 2;
-            //movies.get(rowIndex).getPublishedDate().format(Movie.DATE_FORMATTER);
+                return movies.get(rowIndex).getPublishedDate().format(DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss"));
             case 3:
                 return movies.get(rowIndex).getDescription();
             case 4:

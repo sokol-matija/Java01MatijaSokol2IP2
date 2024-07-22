@@ -76,6 +76,34 @@ BEGIN
 END
 GO
 
+-- Create User Procedure
+--SELECT * From Users
+
+IF EXISTS (SELECT * FROM sys.procedures WHERE name = 'createUser')
+BEGIN
+    DROP PROCEDURE dbo.createUser;
+END
+GO
+
+CREATE PROCEDURE dbo.createUser
+    @Username NVARCHAR(255),
+    @Password NVARCHAR(255),
+    @RoleId INT
+AS
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = @Username)
+    BEGIN
+        INSERT INTO users (username, password, role_id)
+        VALUES (@Username, @Password, @RoleId);
+    END
+    ELSE
+    BEGIN
+        RAISERROR ('Username already exists', 16, 1);
+        RETURN;
+    END
+END;
+GO
+
 -- Drop and create createMovie procedure if not exists
 IF EXISTS (SELECT * FROM sys.procedures WHERE name = 'createMovie')
 BEGIN
@@ -142,3 +170,33 @@ GO
 --SELECT * FROM MOVIES
 
 --delete from movies
+
+
+--Testing
+select users.Username, users.Password, roles.Name
+from users
+join roles on users.Role_id = roles.IDRoles
+where users.Username = 'USER' and users.Password = 'user';
+
+select users.Username, users.Password, roles.Name from users join roles on users.Role_id = roles.IDRoles where users.Username = 'USER' and users.Password = 'user'
+
+-- Drop and create authenticateUser procedure if not exists
+IF EXISTS (SELECT * FROM sys.procedures WHERE name = 'authenticateUser')
+BEGIN
+    DROP PROCEDURE dbo.authenticateUser;
+END
+GO
+
+-- Autentification 
+CREATE PROCEDURE dbo.authenticateUser
+    @Username NVARCHAR(300),
+    @Password NVARCHAR(300),
+    @Role NVARCHAR(300) OUTPUT
+AS
+BEGIN
+    SELECT @Role = roles.Name
+    FROM users
+    JOIN roles ON users.Role_id = roles.IDRoles
+    WHERE users.Username = @Username AND users.Password = @Password;
+END;
+GO

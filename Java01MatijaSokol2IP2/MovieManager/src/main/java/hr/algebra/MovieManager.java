@@ -5,7 +5,13 @@
 package hr.algebra;
 
 import hr.algebra.dal.sql.DatabaseInitilizer;
+import hr.algebra.model.User;
+import hr.algebra.view.EditMoviePanel;
 import hr.algebra.view.LoginPanel;
+import hr.algebra.view.UploadMoviesPanel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -19,6 +25,7 @@ public class MovieManager extends javax.swing.JFrame {
     public MovieManager() {
         DatabaseInitilizer.runScript();
         initComponents();
+        initMenuBar();
         loggInPanel();
         configurePanels();
     }
@@ -32,11 +39,30 @@ public class MovieManager extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        accountMenu = new javax.swing.JMenu();
         tpContent = new javax.swing.JTabbedPane();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        miLogOut = new javax.swing.JMenu();
+
+        accountMenu.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Movie Manager");
-        setPreferredSize(new java.awt.Dimension(1200, 780));
+
+        jMenu1.setText("Account");
+
+        miLogOut.setText("Log out");
+        miLogOut.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                miLogOutMouseClicked(evt);
+            }
+        });
+        jMenu1.add(miLogOut);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -46,16 +72,30 @@ public class MovieManager extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tpContent, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
+            .addComponent(tpContent, javax.swing.GroupLayout.DEFAULT_SIZE, 757, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void miLogOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miLogOutMouseClicked
+        int choice = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to logout?",
+                "Logout Confirmation",
+                JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            tpContent.removeAll();
+            loggInPanel();
+            tpContent.revalidate();
+            tpContent.repaint();
+        }
+    }//GEN-LAST:event_miLogOutMouseClicked
+
     private static final String UPLOAD_PANEL = "Upload movies";
     private static final String EDIT_PANEL = "Edit movies";
-    private static final String LOGG_IN = "login";
+    private static final String LOGIN_PANEL = "login";
+    private static final String ROLE_ADMIN = "ADMIN";
 
     /**
      * @param args the command line arguments
@@ -93,6 +133,10 @@ public class MovieManager extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu accountMenu;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu miLogOut;
     private javax.swing.JTabbedPane tpContent;
     // End of variables declaration//GEN-END:variables
 
@@ -102,6 +146,43 @@ public class MovieManager extends javax.swing.JFrame {
     }
 
     private void loggInPanel() {
-        tpContent.add(LOGG_IN, new LoginPanel());
+        LoginPanel loginPanel = new LoginPanel();
+        loginPanel.setLoginListener((User user) -> {
+            handleLoginSuccess(user);
+        });
+        tpContent.add(LOGIN_PANEL, loginPanel);
+        jMenuBar1.setVisible(false);
     }
+
+    private void handleLoginSuccess(User user) {
+        tpContent.removeAll();
+
+        JPanel contentPanel;
+        String panelName;
+
+        if (ROLE_ADMIN.equalsIgnoreCase(user.getRole().toString())) {
+            contentPanel = new UploadMoviesPanel();
+            panelName = UPLOAD_PANEL;
+        } else {
+            contentPanel = new EditMoviePanel();
+            panelName = EDIT_PANEL;
+        }
+
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        tpContent.add(panelName, scrollPane);
+        tpContent.setSelectedIndex(tpContent.getTabCount() - 1);
+
+        jMenuBar1.setVisible(true);
+
+        tpContent.revalidate();
+        tpContent.repaint();
+    }
+
+    private void initMenuBar() {
+        jMenuBar1.setVisible(false);
+    }
+
 }

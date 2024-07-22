@@ -2,6 +2,7 @@ package hr.algebra.parsers;
 
 import hr.algebra.factory.ParserFactory;
 import hr.algebra.factory.UrlConnectionFactory;
+import hr.algebra.model.CustomGenre;
 import hr.algebra.model.Genre;
 import hr.algebra.model.Movie;
 import hr.algebra.model.Person;
@@ -10,8 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,10 +60,17 @@ public class MovieParser {
         return Jsoup.parse(cData).text();
     }
 
-    public static List<Genre> parseGenres(String cData) {
-        List<String> genreNames = Arrays.asList(cData.split("\\s*,\\s*"));
-        return genreNames.stream()
-                .map(MovieParser::mapToGenre)
+    public static List<Genre> parseGenres(String genresString) {
+        List<String> genreNames = Arrays.asList(genresString.replaceAll("\\[|\\]", "").split("\\s*,\\s*"));
+        return Arrays.stream(genresString.split(","))
+                .map(String::trim)
+                .map(name -> {
+                    Genre genre = Genre.fromString(name);
+                    if (genre == Genre.OTHER) {
+                        CustomGenre.addCustomGenre(name);
+                    }
+                    return genre;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -94,6 +101,17 @@ public class MovieParser {
         } catch (IOException ex) {
             Logger.getLogger(MovieParser.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private static List<Person> parseActors(String actorsString) {
+        actorsString = actorsString.replaceAll("^\\[|\\]$", "");
+
+        List<Person> actors = new ArrayList<>();
+        String[] actorNames = actorsString.split(",");
+        for (String name : actorNames) {
+            actors.add(new Person(name.trim()));
+        }
+        return actors;
     }
 
     private MovieParser() {
@@ -168,19 +186,7 @@ public class MovieParser {
                                     break;
                                 case PUB_DATE:
                                     if (!data.isBlank()) {
-                                        if ("Fri, 28 Jun 2024 22:00:".equals(data)) {
-                                            //movie.setPublishedDate(
-                                            //      LocalDateTime.parse("Fri, 28 Jun 2024 22:00:00 GMT", DateTimeFormatter.RFC_1123_DATE_TIME));
-                                            continue;
-                                        }
-                                        if ("00 GMT".equals(data)) {
-                                            movie.setPublishedDate(
-                                                    LocalDateTime.parse("Fri, 28 Jun 2024 22:00:00 GMT", DateTimeFormatter.RFC_1123_DATE_TIME));
-                                        } else {
-                                            movie.setPublishedDate(
-                                                    LocalDateTime.parse(data, DateTimeFormatter.RFC_1123_DATE_TIME));
-                                        }
-
+                                        movie.setPublishedDate(ZonedDateTime.parse(data, Movie.DATE_FORMATTER));
                                     }
                                     break;
                                 //TODO: Add image to enum and Movie Class
@@ -209,15 +215,9 @@ public class MovieParser {
                                     break;
                                 case GLUMCI:
                                     if (!data.isBlank()) {
-                                        List<Person> actorsList = new ArrayList<>();
-                                        String cData = cleanData(data);
-                                        String[] actorNames = cData.split(", ");
-                                        for (String actor : actorNames) {
-                                            actorsList.add(new Person(actor.trim()));
-                                        }
-                                        movie.setActors(actorsList);
+                                        movie.setActors(parseActors(cleanData(data)));
                                     } else {
-                                        movie.setActors(Collections.emptyList()); // or handle null case as per your application logic
+                                        movie.setActors(Collections.emptyList());
                                     }
                                     break;
                                 case TRAJANJE:
@@ -230,7 +230,6 @@ public class MovieParser {
                                         movie.setYear(Integer.parseInt(data));
                                     }
                                     break;
-                                //TODO: Make Zanr parser
                                 case ZANR:
                                     if (!data.isBlank()) {
                                         String cData = cleanData(data);
