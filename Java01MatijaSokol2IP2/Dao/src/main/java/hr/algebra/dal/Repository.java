@@ -7,7 +7,8 @@ import java.util.Optional;
 public interface Repository {
     //TODO: Separate in dif inferface for each table:
 
-    //Movies
+    void createUser(String username, String password) throws Exception;
+
     int createMovie(Movie movie) throws Exception;
 
     void createMovies(List<Movie> movies) throws Exception;
