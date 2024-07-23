@@ -9,7 +9,6 @@ public class CustomGenre {
 
     public static void addCustomGenre(String genreName) {
         customGenres.add(genreName);
-        System.out.println("Added custom genre: " + genreName);
     }
 
     public static boolean isCustomGenre(String genreName) {

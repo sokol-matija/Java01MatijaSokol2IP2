@@ -7,6 +7,7 @@ package hr.algebra;
 import hr.algebra.dal.sql.DatabaseInitilizer;
 import hr.algebra.model.User;
 import hr.algebra.view.EditMoviePanel;
+import hr.algebra.view.FavoriteMoviePanel;
 import hr.algebra.view.LoginPanel;
 import hr.algebra.view.UploadMoviesPanel;
 import javax.swing.JOptionPane;
@@ -96,6 +97,7 @@ public class MovieManager extends javax.swing.JFrame {
     private static final String EDIT_PANEL = "Edit movies";
     private static final String LOGIN_PANEL = "login";
     private static final String ROLE_ADMIN = "ADMIN";
+    private static final String FAVORITE_PANEL = "Favorite Movies";
 
     /**
      * @param args the command line arguments
@@ -157,28 +159,32 @@ public class MovieManager extends javax.swing.JFrame {
     private void handleLoginSuccess(User user) {
         tpContent.removeAll();
 
-        JPanel contentPanel;
-        String panelName;
-
         if (ROLE_ADMIN.equalsIgnoreCase(user.getRole().toString())) {
-            contentPanel = new UploadMoviesPanel();
-            panelName = UPLOAD_PANEL;
+            // Admin user: Add UploadMoviesPanel
+            UploadMoviesPanel uploadMoviesPanel = new UploadMoviesPanel();
+            addScrollablePanel(uploadMoviesPanel, UPLOAD_PANEL);
         } else {
-            contentPanel = new EditMoviePanel();
-            panelName = EDIT_PANEL;
+            // Regular user: Add EditMoviePanel and FavoriteMoviesPanel
+            EditMoviePanel editMoviePanel = new EditMoviePanel();
+            addScrollablePanel(editMoviePanel, EDIT_PANEL);
+
+            FavoriteMoviePanel favoriteMoviesPanel = new FavoriteMoviePanel(user);
+            addScrollablePanel(favoriteMoviesPanel, FAVORITE_PANEL);
         }
 
-        JScrollPane scrollPane = new JScrollPane(contentPanel);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-        tpContent.add(panelName, scrollPane);
-        tpContent.setSelectedIndex(tpContent.getTabCount() - 1);
-
+        tpContent.setSelectedIndex(0); // Set the first tab as selected
         jMenuBar1.setVisible(true);
 
+        // Revalidate and repaint
         tpContent.revalidate();
         tpContent.repaint();
+    }
+
+    private void addScrollablePanel(JPanel panel, String name) {
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        tpContent.addTab(name, scrollPane);
     }
 
     private void initMenuBar() {

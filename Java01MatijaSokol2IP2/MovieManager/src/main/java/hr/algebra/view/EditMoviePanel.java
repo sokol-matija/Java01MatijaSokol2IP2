@@ -591,21 +591,32 @@ public class EditMoviePanel extends javax.swing.JPanel {
             MessageUtils.showInformationMessage("Wrong operation", "Please choose movie to delete");
             return;
         }
-        if (MessageUtils.showConfirmationMessage(
-                "Delete movie",
-                "Do you really want to delete this movie?")) {
-            try {
-                if (selectedMovie.getPicturePath() != null) {
-                    Files.deleteIfExists(Paths.get(selectedMovie.getPicturePath()));
-                }
-                repository.deleteMovie(selectedMovie.getId());
-                movieTableModel.setMovies(repository.selectMovies());
-                clearForm();
-                MessageUtils.showInformationMessage("Success", "Movie deleted successfully");
-            } catch (Exception ex) {
-                Logger.getLogger(EditMoviePanel.class.getName()).log(Level.SEVERE, null, ex);
-                MessageUtils.showErrorMessage("Error", "Unable to delete movie!");
+
+        try {
+            if (repository.isMovieInFavorites(selectedMovie.getId())) {
+                MessageUtils.showErrorMessage("Delete Error", "This movie is in favorites and cannot be deleted. Remove it from all users' favorites first.");
+                return;
             }
+
+            if (MessageUtils.showConfirmationMessage(
+                    "Delete movie",
+                    "Do you really want to delete this movie?")) {
+                try {
+                    if (selectedMovie.getPicturePath() != null) {
+                        Files.deleteIfExists(Paths.get(selectedMovie.getPicturePath()));
+                    }
+                    repository.deleteMovie(selectedMovie.getId());
+                    movieTableModel.setMovies(repository.selectMovies());
+
+                    clearForm();
+                } catch (Exception ex) {
+                    Logger.getLogger(EditMoviePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to delete movie!");
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(EditMoviePanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to check if movie is in favorites!");
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 

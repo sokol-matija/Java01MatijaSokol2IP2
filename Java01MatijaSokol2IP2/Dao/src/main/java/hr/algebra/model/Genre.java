@@ -17,6 +17,7 @@ public enum Genre {
     SCI_FI("SF"),
     DOCUMENTARY("Documentary"),
     ANIMATION("Animacija"),
+    ANIMITION_v2("animirani"),
     FANTASY("Fantasy"),
     THRILLER("Triler"),
     EPIC_WESTERN("Epski vestern"),

@@ -6,7 +6,7 @@ import java.net.URL;
 
 public class UrlConnectionFactory {
 
-    private static final int TIMEOUT = 10000;
+    private static final int TIMEOUT = 1000;
     private static final String REQUEST_MOTHOD = "GET";
     private static final String USER_AGENT = "User-Agent";
     private static final String MOZILLA = "Mozila/5.0";
