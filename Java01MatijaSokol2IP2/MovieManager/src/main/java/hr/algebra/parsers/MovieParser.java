@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -88,18 +89,38 @@ public class MovieParser {
     }
 
     private static void handleImage(Movie movie, String imageLink) {
-        try {
-            String ext = imageLink.substring(imageLink.lastIndexOf("."));
-            if (ext.length() > 4) {
-                ext = EXT;
-            }
-            String imageName = UUID.randomUUID() + ext;
-            String localImagePath = DIR + File.separator + imageName;
+        if (imageLink == null || imageLink.isEmpty()) {
+            movie.setPicturePath(null);
+            return;
+        }
 
-            FileUtils.copyFromUrl(imageLink, localImagePath);
-            movie.setPicturePath(localImagePath);
-        } catch (IOException ex) {
-            Logger.getLogger(MovieParser.class.getName()).log(Level.SEVERE, null, ex);
+        String ext = FileUtils.filenameHasExtension(imageLink, 3)
+                ? imageLink.substring(imageLink.lastIndexOf(".")) : EXT;
+        String imageName = UUID.randomUUID() + ext;
+        String localImagePath = DIR + File.separator + imageName;
+
+        // Set a temporary path, will be updated if download succeeds
+        movie.setPicturePath(localImagePath);
+
+        // Use a separate thread for image download
+        CompletableFuture.runAsync(() -> {
+            try {
+                FileUtils.copyFromUrl(imageLink, localImagePath);
+            } catch (Exception ex) {
+                Logger.getLogger(MovieParser.class.getName()).log(Level.WARNING,
+                        "Failed to download image: " + imageLink, ex);
+                movie.setPicturePath(null);
+            }
+        });
+    }
+
+    private static boolean safeCopyFromUrl(String source, String destination) {
+        try {
+            FileUtils.copyFromUrl(source, destination);
+            return true;
+        } catch (Exception e) {
+            Logger.getLogger(MovieParser.class.getName()).log(Level.WARNING, "Failed to copy from URL: " + source, e);
+            return false;
         }
     }
 
