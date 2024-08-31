@@ -37,6 +37,7 @@ public class MovieParser {
     private static final String ATTRIBUTE_URL = "url";
     private static final String EXT = ".jpg";
     private static final String DIR = "assets";
+    private static final String UNKNOWN_DIRECTOR = "Unknown Director";
 
     private static String cleanData(String data) {
         return data.replace("<![CDATA[", "").replace("]]>", "").trim();
@@ -232,6 +233,8 @@ public class MovieParser {
                                     if (!data.isBlank()) {
                                         String cData = cleanData(data);
                                         movie.setDirector(new Person(cData));
+                                    } else {
+                                        movie.setDirector(new Person(UNKNOWN_DIRECTOR));
                                     }
                                     break;
                                 case GLUMCI:

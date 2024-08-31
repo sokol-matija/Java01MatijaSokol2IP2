@@ -45,7 +45,7 @@ public enum Genre {
         try {
             return valueOf(name);
         } catch (IllegalArgumentException e) {
-            System.out.println("Custom genre encountered: " + name);
+            //System.out.println("Custom genre encountered: " + name);
             CustomGenre.addCustomGenre(name);
             return OTHER;
         }

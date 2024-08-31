@@ -11,6 +11,7 @@ import hr.algebra.parsers.MovieParser;
 import hr.algebra.utilities.MessageUtils;
 import hr.algebra.view.model.MovieTableModel;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +113,8 @@ public class UploadMoviesPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnUploadActionPerformed
 
+    private static final String BASE_PATH = System.getProperty("user.dir");
+
     private void btnDeleteAllMoviesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAllMoviesActionPerformed
         if (MessageUtils.showConfirmationMessage(
                 "Delete All Movies",
@@ -119,11 +122,13 @@ public class UploadMoviesPanel extends javax.swing.JPanel {
             try {
                 List<Movie> allMovies = repository.selectMovies();
                 for (Movie movie : allMovies) {
-                    if (movie.getPicturePath() != null) {
-                        Files.deleteIfExists(Paths.get(movie.getPicturePath()));
+                    if (movie.getPicturePath() != null && !movie.getPicturePath().isEmpty()) {
+                        Path picturePath = Paths.get(BASE_PATH, movie.getPicturePath());
+                        if (Files.exists(picturePath)) {
+                            Files.delete(picturePath);
+                        }
                     }
                 }
-
                 repository.deleteAllMovies();
 
                 movieTableModel.setMovies(new ArrayList<>());
@@ -151,8 +156,10 @@ public class UploadMoviesPanel extends javax.swing.JPanel {
         try {
             repository = RepositoryFactory.getRepository();
             initTable();
+
         } catch (Exception ex) {
-            Logger.getLogger(UploadMoviesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UploadMoviesPanel.class
+                    .getName()).log(Level.SEVERE, null, ex);
             MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
             System.exit(1);
         }
@@ -170,8 +177,10 @@ public class UploadMoviesPanel extends javax.swing.JPanel {
         try {
             movieTableModel.setMovies(repository.selectMovies());
             movieTableModel.fireTableDataChanged();
+
         } catch (Exception ex) {
-            Logger.getLogger(UploadMoviesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UploadMoviesPanel.class
+                    .getName()).log(Level.SEVERE, null, ex);
             MessageUtils.showErrorMessage("Error", "Failed to refresh movie list: " + ex.getMessage());
         }
     }
