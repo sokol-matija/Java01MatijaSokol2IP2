@@ -24,6 +24,7 @@ public class DatabaseInitilizer {
             StringBuilder sb = new StringBuilder();
             String line;
             Statement stmt = conn.createStatement();
+            int statementCount = 0;
             while ((line = reader.readLine()) != null) {
                 // Skip comments and empty lines
                 if (line.trim().isEmpty() || line.trim().startsWith("--")) {
@@ -32,7 +33,9 @@ public class DatabaseInitilizer {
                 sb.append(line).append("\n");
                 // Execute statement when encountering semicolon
                 if (line.trim().endsWith("GO")) {
-                    executeStatement(stmt, sb.toString().substring(0, sb.toString().length() - 3));
+                    String sqlStatement = sb.toString().substring(0, sb.toString().length() - 3);
+                    statementCount++;
+                    executeStatement(stmt, sqlStatement);
                     sb = new StringBuilder();
                     // Recreate statement to prevent closed statement issue
                     stmt = conn.createStatement();
@@ -40,11 +43,12 @@ public class DatabaseInitilizer {
             }
             // Execute the remaining statement if any
             if (sb.length() > 0) {
-                executeStatement(stmt, sb.toString());
+                String sqlStatement = sb.toString();
+                statementCount++;
+                executeStatement(stmt, sqlStatement);
             }
 
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -52,10 +56,6 @@ public class DatabaseInitilizer {
         try {
             stmt.execute(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Close statement only after all statements are executed
-            // stmt.close();
         }
     }
 }

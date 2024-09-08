@@ -1,8 +1,9 @@
 package hr.algebra.model;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Movie {
 
@@ -11,7 +12,7 @@ public class Movie {
 
     private int id;
     private String title;
-    private LocalDateTime publishedDate;
+    private ZonedDateTime publishedDate;
     private String description;
     private String originalTitle;
     private Person director;
@@ -27,7 +28,7 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type, String picturePath) {
+    public Movie(String title, ZonedDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type, String picturePath) {
         this.title = title;
         this.publishedDate = publishedDate;
         this.description = description;
@@ -43,7 +44,7 @@ public class Movie {
         this.picturePath = picturePath;
     }
 
-    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type, String picturePath) {
+    public Movie(int id, String title, ZonedDateTime publishedDate, String description, String originalTitle, Person director, List<Person> actors, int duration, int year, List<Genre> genres, String imageLink, int rating, String type, String picturePath) {
         this(title, publishedDate, description, originalTitle, director, actors, duration, year, genres, imageLink, rating, type, picturePath);
         this.id = id;
     }
@@ -60,11 +61,11 @@ public class Movie {
         return title;
     }
 
-    public LocalDateTime getPublishedDate() {
+    public ZonedDateTime getPublishedDate() {
         return publishedDate;
     }
 
-    public void setPublishedDate(LocalDateTime publishedDate) {
+    public void setPublishedDate(ZonedDateTime publishedDate) {
         this.publishedDate = publishedDate;
     }
 
@@ -186,6 +187,18 @@ public class Movie {
     public String toString() {
         String shortDescription = description.length() > 20 ? description.substring(0, 20) : description;
         return "id=" + id + ", " + title + ", " + shortDescription + ", " + originalTitle + ", " + director + ", " + actors + ", " + duration + ", " + year + genres + ", " + imageLink + ", " + rating + ", " + type;
+    }
+
+    public String getGenresAsString() {
+        return genresToString(this.genres);
+    }
+
+    private String genresToString(List<Genre> genres) {
+        return genres.stream()
+                .map(genre -> genre == Genre.OTHER
+                ? CustomGenre.getCustomGenres().stream().findFirst().orElse("Other")
+                : genre.displayName)
+                .collect(Collectors.joining(", "));
     }
 
 }

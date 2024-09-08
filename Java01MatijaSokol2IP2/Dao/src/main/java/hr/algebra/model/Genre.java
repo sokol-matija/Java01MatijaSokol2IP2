@@ -1,10 +1,14 @@
 package hr.algebra.model;
 
-public enum Genre {
+import java.util.HashMap;
+import java.util.Map;
 
+public enum Genre {
     ACTION("Akcija"),
     ACTION2("Akcijski"),
     ACTION_COMEDY("Akcijska komedija"),
+    ACTION_TRILER("akcijski triler"),
+    ACTION_ADVENTURE("Akcijska avantura"),
     COMEDY("Komedija"),
     DRAMA("Drama"),
     CRIME_DRAMA("Krimi drama"),
@@ -13,27 +17,37 @@ public enum Genre {
     SCI_FI("SF"),
     DOCUMENTARY("Documentary"),
     ANIMATION("Animacija"),
+    ANIMITION_v2("animirani"),
     FANTASY("Fantasy"),
     THRILLER("Triler"),
-    EPIC_WESTERN("Epski vestern");
+    EPIC_WESTERN("Epski vestern"),
+    CONCERT("Koncert"),
+    OTHER("Other");
 
     public final String displayName;
+    private static final Map<String, Genre> displayNameMap = new HashMap<>();
+
+    static {
+        for (Genre genre : values()) {
+            displayNameMap.put(genre.displayName.toLowerCase(), genre);
+        }
+    }
 
     private Genre(String displayName) {
         this.displayName = displayName;
     }
 
-    @Override
-    public String toString() {
-        return displayName;
+    public static Genre fromString(String text) {
+        return displayNameMap.getOrDefault(text.toLowerCase(), OTHER);
     }
 
-    public static Genre fromString(String text) {
-        for (Genre genre : Genre.values()) {
-            if (genre.displayName.equalsIgnoreCase(text)) {
-                return genre;
-            }
+    public static Genre safeValueOf(String name) {
+        try {
+            return valueOf(name);
+        } catch (IllegalArgumentException e) {
+            //System.out.println("Custom genre encountered: " + name);
+            CustomGenre.addCustomGenre(name);
+            return OTHER;
         }
-        throw new IllegalArgumentException("No constant with displayName " + text + " found");
     }
 }

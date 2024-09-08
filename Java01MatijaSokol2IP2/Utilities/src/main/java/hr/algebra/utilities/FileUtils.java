@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Optional;
 import javax.swing.JFileChooser;
@@ -45,7 +47,10 @@ public class FileUtils {
         createDirHierarchy(destination);
         HttpURLConnection con = UrlConnectionFactory.getHttpURLConnection(source);
         try (InputStream is = con.getInputStream()) {
-            Files.copy(is, Paths.get(destination));
+            Files.copy(is, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
+        } catch (SocketTimeoutException e) {
+            System.out.println("Timeout while downloading image: " + source);
+            throw e;
         }
     }
 
